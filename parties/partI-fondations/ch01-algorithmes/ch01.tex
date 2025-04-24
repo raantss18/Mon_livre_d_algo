@@ -1,6 +1,9 @@
 % ======================================================================
 %  Chapitre 1 – Algorithmes et Programmes (Partie I : Fondations)
-%  Ce fichier repose sur packages.tex & macros.tex inclus dans le préambule
+%  Public : étudiantes et étudiants universitaires n’ayant jamais suivi de
+%           cours d’algorithmique.
+%  Objectif : poser les bases avec un langage clair, des exemples concrets
+%             et plusieurs mini‑exercices d’appropriation.
 % ======================================================================
 
 \chapter{Algorithmes et programmes : notions fondamentales}
@@ -9,86 +12,108 @@
 % Mise en bouche (citation / épigraphe)
 % ----------------------------------------------------------------------
 \begin{flushright}\small
-« Un programme n'est qu'un algorithme écrit dans une langue que la machine
+« Un programme n’est qu’un algorithme écrit dans une langue que la machine
 comprend. »\\[-0.2em]
-— \textit{Donald E. Knuth}
+— \textit{Donald E. Knuth}
 \end{flushright}
 
 \section*{Objectifs du chapitre}
 \begin{itemize}[label=\small$\blacktriangleright$]
-  \item Comprendre la différence entre \emph{algorithme}, \emph{programme} et \emph{implémentation}.
-  \item Savoir exprimer un algorithme sous forme de pseudo‑code clair.
-  \item Introduire les premières notions de coût temporel et spatial.
-  \item Illustrer la démarche d'analyse sur quelques exemples classiques.
+  \item Distinguer clairement \emph{algorithme}, \emph{programme} et \emph{implémentation}.
+  \item Savoir décrire un algorithme simple en pseudo‑code.
+  \item Comprendre pourquoi il est utile de mesurer le temps et la mémoire.
+  \item S’exercer sur des problèmes très élémentaires (tri, PGCD, factorielle).
 \end{itemize}
 \vspace{0.5em}
 
 % **********************************************************************
-\section{Motivation : pourquoi les algorithmes ?}
+\section{Pourquoi parler d’algorithmes ?}
 
-Les algorithmes sont les \og recettes \fg{} qui transforment des données d'entrée
-en résultats d'intérêt. Ils :
+Un \textbf{algorithme} est à l’informatique ce qu’une recette est à la cuisine : un
+ensemble d’étapes précises qui transforment des \emph{ingrédients} (les données
+d’entrée) en un \emph{plat fini} (le résultat). Derrière chaque application —
+banque en ligne, réseau social, GPS, moteur de recherche — se cachent des
+algorithmes. Étudier leur conception permet :
 \begin{enumerate}
-  \item offrent un \textbf{langage universel} pour décrire la résolution de problèmes ;
-  \item permettent de \textbf{prouver} qu'une méthode est correcte ;
-  \item servent de base à la \textbf{mesure de performance} que l'on optimisera
-        ensuite ;
-  \item constituent un pont naturel entre \emph{mathématiques} et \emph{informatique}.
+  \item de \textbf{formaliser} la résolution de problèmes ;              % logique
+  \item de \textbf{prouver} qu’une méthode fonctionne toujours ;        % correction
+  \item d’estimer le \textbf{temps} et la \textbf{mémoire} nécessaires ; % performance
+  \item d’améliorer continuellement l’efficacité des logiciels.          % optimisation
 \end{enumerate}
 
 \begin{reflexion}
-Peut‑on imaginer un domaine scientifique ou industriel qui n'utilise aucun
-algorithme ? Discutez.
+Citez trois activités quotidiennes (hors informatique) qui suivent déjà un
+algorithme implicite. Que se passerait‑il si les étapes étaient exécutées dans
+le désordre ?
 \end{reflexion}
 
 % **********************************************************************
-\section{Définitions de base}
+\section{Vocabulaire de base}
 
 \subsection{Algorithme}
-Un \emph{algorithme} est une \textbf{suite finie d'instructions}, non ambiguës,
-qui s'exécutent dans un ordre déterminé et qui, appliquées à des données
-appartenant à un ensemble \(D\), produisent un résultat dans un ensemble
-\(R\) après un nombre fini d'étapes.
+Suite finie d’\textbf{instructions non ambiguës} exécutées dans un ordre bien
+défini. Chaque pas doit être si clair qu’une personne (ou une machine) ne peut
+l’interpréter de deux façons différentes.
 
 \subsection{Programme}
-Un \emph{programme} est l'\textbf{implantation} concrète d'un algorithme dans un
-langage (C++, Python, \dots) compréhensible par une machine.
+Traduction d’un algorithme dans un \textbf{langage} que l’ordinateur
+comprend (C++, Python, Java…). Le compilateur ou l’interpréteur sert de pont
+entre nos idées et la machine.
 
-\subsection{Implémentation vs. Spécification}
-La spécification décrit \emph{ce que} doit faire le logiciel ; l'implémentation
-précise \emph{comment} le réaliser. Ces deux niveaux doivent être soigneusement
-dissociés.
+\subsection{Spécification et implémentation}
+\begin{itemize}
+  \item \textbf{Spécification} : \og que doit faire le programme ? \fg{}
+        (ex. \og trier les nombres par ordre croissant \fg).
+  \item \textbf{Implémentation} : \og comment va‑t‑il s’y prendre ? \fg{}
+        (ex. \emph{méthode de tri par insertion}).
+\end{itemize}
+Séparer les deux évite de se perdre dans les détails trop tôt.
 
 \begin{exercice}[Spécification ou implémentation ?]
-Pour chacun des énoncés suivants, dites s'il s'agit d'une spécification ou
-d'une implémentation et justifiez :
+Pour chaque phrase, cochez \emph{S} (spécification) ou \emph{I} (implémentation)
+et justifiez votre choix :
 \begin{enumerate}[label=\alph*)]
-  \item Trier un tableau d'entiers en ordre croissant.
-  \item Répéter \lstinline|n-1| fois : balayer le tableau et échanger les valeurs
-des positions \lstinline|i| et \lstinline|i+1| si elles sont mal ordonnées.
-  \item Calculer \(\gcd(a,b)\), le plus grand commun diviseur de deux entiers.
+  \item \og Trouver le plus grand nombre dans une liste. \fg{}
+  \item \og Parcourir la liste et mémoriser la valeur maximale rencontrée. \fg{}
+  \item \og Chiffrer un message selon la clé fournie. \fg{}
+  \item \og Pour chaque caractère, appliquer un décalage de trois positions dans
+        l’alphabet (chiffrement de César). \fg{}
 \end{enumerate}
 \end{exercice}
 
 % **********************************************************************
-\section{Premier exemple : l'algorithme d'Euclide}
+\section{Premier exemple : le plus grand commun diviseur}
 
-\subsection{Pseudo‑code}
+Nous allons calculer le \textbf{PGCD} de deux entiers grâce à l’algorithme
+millénaire d’Euclide. Pourquoi ce choix ? Il est court, toujours correct et ses
+performances se mesurent facilement.
+
+\subsection{Pseudo‑code pas à pas}
 \begin{lstlisting}[caption={Algorithme d'Euclide (version itérative)}]
-Entr\'ee  : deux entiers strictement positifs a, b (a > b)
-Sortie  : g = pgcd(a, b)
+Entree : deux entiers strictement positifs a, b (a ≥ b)
+Sortie : g = pgcd(a, b)
 
-g <- a, h <- b
-Tant que h != 0 faire
-    r <- g mod h
-    g <- h
-    h <- r
+g ← a, h ← b
+Tant que h ≠ 0 faire
+    r ← g mod h   // reste de la division de g par h
+    g ← h
+    h ← r
 Retourner g
 \end{lstlisting}
 
-\subsection{Implémentation C++}
+\paragraph{Lecture ligne à ligne}
+\begin{itemize}
+  \item \texttt{g} contient la valeur courante du PGCD présumé.
+  \item Tant que le reste \texttt{h} n’est pas nul, on poursuit la division.
+  \item Quand \texttt{h} vaut 0, la dernière valeur non nulle de \texttt{g} est
+        le PGCD.
+\end{itemize}
+
+\subsection{Implémentation C++ minimale}
 \begin{lstlisting}[language=C++,caption=euclid.cpp]
 #include <iostream>
+#include <cstdint>
+
 std::uint64_t pgcd(std::uint64_t a, std::uint64_t b) {
     while (b != 0) {
         auto r = a % b;
@@ -97,67 +122,73 @@ std::uint64_t pgcd(std::uint64_t a, std::uint64_t b) {
     }
     return a;
 }
+
 int main() {
-    std::uint64_t x{}, y{};
+    std::uint64_t x, y;
     std::cin >> x >> y;
     std::cout << pgcd(x, y) << "\n";
 }
 \end{lstlisting}
 
-\subsection{Analyse de complexité}
-Le nombre d'itérations est borné par \(5\log_{10}(b)\) (propriété de Lamé).
-Ainsi l'algorithme s'exécute en temps \(\bigO(\log\min(a,b))\) et en espace
-constante.
+\subsection{Et si on mesurait le coût ?}
+À chaque tour de boucle, on fait une division euclidienne. Le mathématicien
+Gabriel Lamé a montré qu’il suffit de \(5\log_{10}(b)\) itérations au plus
+lorsque \(b\) est le plus petit des deux nombres. Le temps d’exécution est donc
+proportionnel à \(\log \min(a, b)\), noté $\bigO(\log n)$.
 
 \begin{reflexion}
-Pourquoi l'algorithme d'Euclide est‑il \og optimal \fg{} pour le
-\textsc{PGCD} sur des architectures classiques ?
+Essayez manuellement l’algorithme pour \(a = 48,\, b = 18\). Combien
+d’itérations obtenez‑vous ?
 \end{reflexion}
 
 % **********************************************************************
-\section{Introduction aux notions de coût}
+\section{Premiers pas vers l’analyse de complexité}
 
-\subsection{Temps d'exécution}
-On compte le nombre d'opérations élémentaires en fonction de la taille des
-données :\ \(n\) (longueur du tableau, nombre de bits, $\dots$). L'objectif :
-trouver une borne asymptotique — généralement $\bigO$.
+\subsection{Temps (nombre d’opérations)}
+On compte \emph{combien} d’étapes élémentaires (addition, comparaison, etc.)
+le programme effectue en fonction de la taille de l’entrée (\(n\)). Cette mesure
+s’appelle la \emph{complexité temporelle}. On utilise souvent la notation
+$\bigO$ (\og grand O \fg) pour donner une borne supérieure grossière.
 
-\subsection{Mémoire utilisée}
-Même démarche que pour le temps ; certaines optimisations échangent espace et
-temps.
+\subsection{Mémoire (espace occupé)}
+Même idée : combien de cases supplémentaires devons‑nous réserver ? Pour
+l’algorithme d’Euclide, on se contente de trois variables entières ; l’espace est
+\emph{constant} ($\bigO(1)$).
 
-\begin{exercice}[]
-\textbf{a)} Proposez une version récursive et une version itérative de la
-factorielle \(n!\).\\
-\textbf{b)} Analysez leurs complexités (temps et espace).
+\begin{exercice}[Itératif vs récursif]
+\textbf{a)} Donnez une version \emph{récursive} du calcul de la factorielle
+\(n!\).\\
+\textbf{b)} Donnez la version \emph{itérative}.\\
+\textbf{c)} Comparez les deux en temps et en espace (pile d’appels).
 \end{exercice}
 
 % **********************************************************************
-\section{Étude de cas guidée}
+\section{Mini‑projet guidé}
 
-\begin{tp}[De l'algorithme au programme]
-\textbf{Objectif :} implémenter une mini‑bibliothèque C++ offrant
-\lstinline|pgcd|, \lstinline|ppcm| et \lstinline|factorielle|, accompagnée de
-tests unitaires (Catch2).
+\begin{tp}[De l’algorithme au programme]
+\textbf{But :} créer une mini‑bibliothèque C++ nommée \texttt{arith} contenant
+\texttt{pgcd}, \texttt{ppcm} et \texttt{factorielle}, puis en vérifier la
+correction par des tests unitaires (Catch2).
 
-\textbf{Étapes :}
+\textbf{Étapes proposées :}
 \begin{enumerate}
-  \item Écrire un \emph{header} \lstinline|arith.hpp| déclarant les fonctions.
-  \item Créer \lstinline|arith.cpp| avec les implémentations (pas de récursion
-        inutile).
-  \item Configurer un \lstinline|CMakeLists.txt| minimal.
-  \item Rédiger des cas de tests (valeurs limites : 0, 1, grands entiers).
-  \item Mesurer le temps avec \lstinline|std::chrono| pour des entrées croissantes.
+  \item Écrire un fichier d’en‑tête \texttt{arith.hpp} (déclarations).
+  \item Implémenter dans \texttt{arith.cpp}.
+  \item Configurer un \texttt{CMakeLists.txt} minimal pour la compilation.
+  \item Rédiger des tests couvrant : cas triviaux (0, 1), cas usuels, cas
+        \og limites \fg{} (valeurs proches de la capacité d’un \texttt{uint64\_t}).
+  \item Mesurer les temps moyens d’exécution pour des entrées de plus en plus
+        grandes à l’aide de \texttt{std::chrono}.
 \end{enumerate}
 \end{tp}
 
 % **********************************************************************
 \section*{À retenir}
 \begin{itemize}
-  \item Un \emph{algorithme} est une séquence finie d'étapes déterministes.
-  \item Un \emph{programme} implémente un algorithme dans un langage cible.
-  \item Toute étude d'algorithme passe par la \textbf{preuve de correction} et
-        l'\textbf{analyse de complexité}.
+  \item Un \textbf{algorithme} = recette finie et non ambiguë.
+  \item Un \textbf{programme} = algorithme + langage + machine.
+  \item Spécification (\og quoi ?\fg) \emph{$\neq$} implémentation (\og comment ?\fg).
+  \item Avant d’optimiser, on mesure : temps $\bigO(\cdot)$ et mémoire.
 \end{itemize}
 
 % ----------------------------------------------------------------------
