@@ -1,0 +1,222 @@
+% ======================================================================
+%  Chapitre 3 – Tableaux, listes, piles, files et tableaux dynamiques
+%  Références principales :
+%    • Sedgewick & Wayne, *Algorithms*, chap. 1–2  :contentReference[oaicite:0]{index=0}
+%    • Shaffer, *Data Structures and Algorithm Analysis*, chap. 3       :contentReference[oaicite:1]{index=1}
+% ======================================================================
+
+\chapter{Structures linéaires fondamentales}
+
+% ----------------------------------------------------------------------
+
+% ----------------------------------------------------------------------
+% Épigraphe motivante
+% ----------------------------------------------------------------------
+\begin{flushright}\small
+« La vraie question n’est pas de savoir si les ordinateurs pensent, \\
+mais s’ils peuvent nous aider à mieux organiser nos données. »\\[-0.2em]
+— \textit{Robert Sedgewick}
+\end{flushright}
+
+Les tableaux, listes, piles et files forment la « charpente » de la plupart
+des algorithmes : rechercher, trier, gérer un historique, synchroniser des
+processus, etc.  Maîtriser leurs propriétés et leur coût est indispensable
+avant d’aborder les graphes ou les paradigmes de conception plus avancés.
+
+\section*{Objectifs du chapitre}
+\begin{itemize}[label=\small$\blacktriangleright$]
+  \item Définir clairement chaque structure et ses opérations de base.
+  \item Mesurer les complexités en temps et en mémoire.
+  \item Mettre en évidence les cas d’usage typiques.
+\end{itemize}\vspace{0.4em}
+
+% **********************************************************************
+\section{Tableau statique (\textit{array})}
+
+\subsection{Définition et propriétés}
+Un \textbf{tableau} est une zone de mémoire contiguë contenant $n$ cases,
+accessibles en $O(1)$ via un indice entier.
+Insertion et suppression au milieu coûtent $O(n)$ à cause du
+décalage des éléments.
+
+\begin{exercice}[Accès direct]
+Soit un tableau \lstinline|A| de 1 000 000 d’entiers.
+\begin{enumerate}[label=\alph*)]
+  \item Combien de lectures mémoire pour afficher \lstinline|A[723456]| ?
+  \item Pourquoi dit-on que le temps d’accès est \emph{constant} malgré la
+        taille massive du tableau ?
+\end{enumerate}
+\end{exercice}
+
+% **********************************************************************
+\section{Tableau dynamique (vector)}
+
+%\subsection{Motivation}
+Pour pallier la taille fixe d’un tableau, on utilise un
+\textbf{tableau dynamique} (ex. \lstinline|std::vector| en C++) qui s’agrandit
+automatiquement.
+
+\subsection{Amortised Analysis}
+Lorsqu’on dépasse la capacité, le vecteur double sa taille et copie les
+éléments ; cette opération rare rend le coût moyen d’un \lstinline|push_back|
+égal à $O(1)$ amorti.
+
+\begin{reflexion}
+Pourquoi la stratégie « doubler la taille » est-elle plus
+efficace qu’ajouter une seule case à chaque débordement ?
+\end{reflexion}
+
+% **********************************************************************
+\section{Liste chaînée}
+
+\subsection{Définition}
+Une \textbf{liste simple} est une suite de nœuds contenant chacun une
+\lstinline|cle| et un pointeur vers le suivant.
+Insertion et suppression en tête coûtent $O(1)$, la recherche $O(n)$.
+
+\begin{exercice}[Parcours]
+Écrire une fonction C++ qui renvoie la longueur d’une liste chaînée ;
+analyser sa complexité.
+\end{exercice}
+
+\paragraph{Solution : }
+
+
+
+\begin{lstlisting}[language=C++,caption={list\_length.cpp}]
+#include <cstddef>   // std::size_t
+
+struct Node {
+    int   key;
+    Node* next;
+    explicit Node(int k, Node* n = nullptr) : key{k}, next{n} {}
+};
+
+std::size_t length(const Node* head) noexcept
+{
+    std::size_t n = 0;
+    for (auto p = head; p != nullptr; p = p->next) ++n;  // O(n)
+    return n;
+}
+\end{lstlisting}
+
+
+% ----------------------------------------------------------------------
+\paragraph{Remarque.}
+Les listes implémentent naturellement les piles et files sans déplacement
+d’éléments, contrairement aux tableaux.
+
+% **********************************************************************
+\section{Pile (stack)}
+
+\subsection{Principe LIFO (Last\,–\,In, First\,–\,Out)}
+
+Une \textbf{pile} est une structure qui n’autorise l’accès qu’à un seul extrémité : on y \textbf{empile} (avec \lstinline|push|) et on y \textbf{dépile}
+(avec \lstinline|pop|) toujours au même endroit, appelé « sommet »
+(\lstinline|top|).  Le dernier élément ajouté sera donc systématiquement le
+premier retiré : c’est la règle \textbf{Last-In, First-Out}.
+Cette contrainte rend les opérations extrêmement simples : chaque
+\lstinline|push|, \lstinline|pop| ou lecture du sommet s’effectue en temps
+constant $O(1)$, car il suffit de modifier un pointeur (pile implémentée par
+liste) ou une case en bout de tableau (pile implémentée par vecteur).
+Les piles servent notamment :
+
+\begin{itemize}
+  \item à mémoriser les appels récursifs (pile d’exécution d’un programme) ;
+  \item à parcourir un graphe en profondeur (DFS) ;
+  \item à évaluer une expression arithmétique écrite en notation postfixée
+        (algorithme de Dijkstra « shunting-yard »).
+\end{itemize}
+
+En résumé, la pile sacrifie l’accès direct aux éléments intermédiaires pour
+gagner une simplicité et une rapidité optimales sur les opérations de tête.
+
+\begin{reflexion}
+Comment la pile d’appels d’un programme C++ s’appuie-t-elle sur ce concept ?
+\end{reflexion}
+
+% **********************************************************************
+\section{File (queue)}
+
+\subsection{Principe FIFO}
+Une \textbf{file} applique la discipline \emph{First-In, First-Out}
+(FIFO) :
+\lstinline|enqueue| ajoute en queue, \lstinline|dequeue| retire en tête,
+toutes deux en $O(1)$ avec une implémentation circulaire.
+
+\begin{exercice}[Buffer circulaire]
+Implémentez un buffer circulaire de taille fixe ; démontrez que
+\lstinline|enqueue|/\lstinline|dequeue| sont $O(1)$.
+\end{exercice}
+
+% **********************************************************************
+\section{Comparatif rapide}
+
+\begin{center}\small
+\begin{tabular}{lccc}
+\hline
+\textbf{Structure} & \textbf{Accès aléatoire} & \textbf{Insertion tête} & \textbf{Recherche}\\
+\hline
+Tableau (static) & $O(1)$ & $O(n)$ & $O(n)$ \\
+Vecteur (dynamic) & $O(1)$ & $O(n)$ amorti en fin & $O(n)$ \\
+Liste chaînée & $O(n)$ & $O(1)$ & $O(n)$ \\
+Pile & $O(1)$ (\lstinline|top|) & $O(1)$ & — \\
+File & $O(1)$ (\lstinline|front|) & $O(1)$ & — \\
+\hline
+\end{tabular}
+\end{center}
+
+% **********************************************************************
+\section*{Travail pratique – Implémenter un mini-container}
+
+\begin{tp}[Mini STL simplifiée]
+\textbf{Objectif.}  Produire une bibliothèque C++ \lstinline|ministl::|
+contenant :
+\begin{itemize}
+  \item un vecteur dynamique (doublement de capacité) ;
+  \item une liste simple avec itérateur ;
+  \item une pile et une file basées sur la liste.
+\end{itemize}
+\textbf{Étapes.}
+\begin{enumerate}
+  \item Rédiger les \lstinline|.hpp| et \lstinline|.cpp| séparés.
+  \item Ajouter des tests unitaires (Catch2) : push/pop, débordement, itérations.
+  \item Mesurer le temps d’un million d’insertions dans le vecteur et la liste ;
+        interpréter les différences à la lumière de la complexité.
+\end{enumerate}
+\end{tp}
+
+% **********************************************************************
+\section*{Exercices supplémentaires}
+
+\begin{exercice}
+Expliquez pourquoi l’accès \lstinline|A[i]| dans un tableau statique
+est équivalent à l’arithmétique d’adresse \(\text{base}+i\times\text{taille}\).
+\end{exercice}
+
+\begin{exercice}
+Donnez un exemple concret où l’on préfère une liste à un vecteur,
+malgré la lenteur du parcours séquentiel.
+\end{exercice}
+
+\begin{exercice}
+Calculez le coût amorti d’une stratégie de \emph{+10 \%} de capacité
+au lieu de \emph{×2} pour un tableau dynamique.
+\end{exercice}
+
+% **********************************************************************
+\section*{Questions de réflexion}
+
+\begin{reflexion}
+Pourquoi la pile et la file, bien qu’implémentables avec un tableau,
+sont-elles souvent construites sur une liste chaînée dans les OS ?
+\end{reflexion}
+
+\begin{reflexion}
+Comment la notion de \emph{cache} influence-t-elle réellement le choix
+entre tableau et liste dans les algorithmes modernes ?
+\end{reflexion}
+
+% ----------------------------------------------------------------------
+% Fin du chapitre
+% ----------------------------------------------------------------------

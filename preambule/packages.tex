@@ -59,6 +59,7 @@
 % Code & algorithmes
 % ------------------------------------------------------------------
 \usepackage{listings}
+\usepackage{listingsutf8}
 \lstdefinestyle{algocpp}{
   language=C++,
   basicstyle=\small\ttfamily,
@@ -73,6 +74,8 @@
 }
 \lstset{
   inputencoding=utf8,
+   basicstyle=\small\ttfamily,
+  mathescape     = true,
   extendedchars=true,   % garde les caractères 8-bits
   literate=
     {←}{{$\leftarrow$}}1
@@ -82,6 +85,8 @@
     {≤}{{$\le$}}1
     {×}{{$\times$}}1
     {÷}{{$\div$}}1
+    {⌊}{{$\lfloor$}}1
+    {⌋}{{$\rfloor$}}1
 }
 
 \lstset{style=algocpp}

@@ -1,0 +1,478 @@
+% ======================================================================
+%  Chapitre 2 – Outils mathématiques pour l’analyse d’algorithmes
+%  Version enrichie : définitions + exemples détaillés destinés à des
+%  débutantes / débutants du premier cycle universitaire.
+%  Références principales : Cormen et al. (CLRS) ch. 2–4 ; Kleinberg &
+%  Tardos chap. 0 ; Sedgewick & Wayne chap. 1 ; Skiena « War Stories ».
+% ======================================================================
+
+\chapter{Outils mathématiques pour l’analyse}
+
+% ----------------------------------------------------------------------
+% Épigraphe motivante
+% ----------------------------------------------------------------------
+\begin{flushright}\small
+« Les mathématiques sont la grammaire de la science. »\\[-0.2em]
+— \textit{Carl Friedrich Gauss}
+\end{flushright}
+
+\section*{Objectifs du chapitre}
+\begin{itemize}[label=\small$\blacktriangleright$]
+  \item Poser les briques mathématiques indispensables : sommes, suites,
+        logarithmes.
+  \item Comprendre et \emph{utiliser} les notations asymptotiques
+        ($\bigO$, $\Theta$, $\Omega$).
+  \item Savoir démontrer une propriété par induction \textbf{et} savoir
+        l’appliquer à un algorithme concret.
+  \item Acquérir une méthode pour résoudre les relations de récurrence
+        les plus fréquentes (dichotomie, tri fusion, etc.).
+\end{itemize}
+\vspace{0.8em}
+
+% **********************************************************************
+\section{Pourquoi des maths dans l’informatique ?}
+Un algorithme n’est pas seulement un bout de code ; c’est une idée
+\emph{prouvable}. Les mathématiques servent :
+\begin{enumerate}
+  \item à \textbf{décrire} précisément le problème et l’algorithme ;
+  \item à \textbf{démontrer} sa correction (le résultat est toujours bon) ;
+  \item à \textbf{quantifier} ses ressources (temps, mémoire, bande
+        passante, énergie).\footnote{Voir l’introduction de
+        \cite{Cormen2022} pour une discussion classique.}
+\end{enumerate}
+
+\begin{reflexion}
+Pensez à un jeu vidéo, une application bancaire et un réseau social. Où, selon
+vous, se cachent les calculs mathématiques ? (Indices : trajectoires de
+personnages, chiffrement RSA / ECC, moteurs de recommandation.)
+\end{reflexion}
+
+% **********************************************************************
+\section{Sommes, suites et notations de base}
+
+\subsection{Suites numériques}
+Une \emph{suite} $(u_n)_{n\ge 0}$ est une fonction de $\mathbb N$ vers
+$\mathbb R$. Elle peut être définie :
+\begin{itemize}
+  \item \textbf{explicitement} : $u_n = 3n+2$ ;
+  \item \textbf{récursivement} : $u_{n+1}=2u_n+1$ avec $u_0=0$.
+\end{itemize}
+En pratique, on utilise une suite pour \textbf{compter} combien d’opérations $T(n)$ sont nécessaires lorsqu’on agrandit la taille de l’entrée $n$. Ainsi, chaque terme de la suite montre « le coût quand on ajoute un élément de plus ».
+
+
+\subsection{Sommes arithmétiques et géométriques}
+\begin{align*}
+\sum_{i=1}^{n} i &\;=\; \frac{n(n+1)}{2} && \text{(Gauss : addition « en miroir »)}\\[0.4em]
+\sum_{i=0}^{n-1} r^{i} &\;=\; \frac{1-r^{n}}{1-r}\quad (r\neq 1) && \text{(raison $r$ ; géométrique)}
+\end{align*}
+\emph{Application} : si un tri naïf effectue $(n-1)+\dots+2+1$ comparaisons,
+il exécute $\tfrac{n(n-1)}{2}\in\Theta(n^2)$ opérations.
+
+\subsection{Logarithmes — rappels essentiels}
+Soient $a$ et $b$ deux réels strictement positifs :\\
+\begin{itemize}
+  \item $\log_b a$ = exposant $x$ tel que $b^x=a$.
+  \item Bases usuelles : $2$ (binaire), $10$ (décimale), $e$ (naturel).
+  \item \textbf{Changement de base} : $\log_b a = \dfrac{\log_k a}{\log_k b}$.
+  \item \textbf{Croissance lente} : $\log n\ll n^{\varepsilon}$ pour tout
+        $\varepsilon>0$.
+\end{itemize}
+
+\begin{exercice}[Manipuler les logarithmes]
+Montrez que $\displaystyle\log_2(n!)\in\Theta(n\log n)$.
+\textit{Indication :} utilisez la somme $\sum_{k=1}^{n} \log_2 k$ et comparez‑la
+à une intégrale.
+\end{exercice}
+
+% **********************************************************************
+\section{Principe d’induction : mode d’emploi}
+
+\subsection{Induction simple (ou faible)}
+\begin{enumerate}
+  \item \textbf{Base} : vérifier $P(n_0)$.
+  \item \textbf{Hérédité} : supposer $P(k)$ vraie et montrer $P(k+1)$.
+\end{enumerate}
+Si les deux étapes tiennent, $P(n)$ est vraie $\forall n\ge n_0$.
+
+\subsection{Induction forte}
+Hypothèse plus large : on suppose $P(n_0),\ldots,P(k)$ pour démontrer $P(k+1)$.
+Utile quand la valeur courante dépend de \emph{plusieurs} valeurs précédentes
+(ex. suite de Fibonacci).
+
+%\paragraph{Exemple détaillé — somme des $n$ premiers entiers}
+\begin{exercice}[Somme des premiers entiers]
+Prouver que $S(n)=\sum_{i=1}^{n} i = \frac{n(n+1)}{2}$.
+\end{exercice}
+\textbf{Solution}
+\begin{itemize}
+  \item \emph{Base ($n=1$)} : $S(1)=1$ et $\tfrac{1(1+1)}{2}=1$ ; ok.
+  \item \emph{Induction} : supposons la formule vraie pour $n=k$.
+        Alors $S(k+1)=S(k)+(k+1)=\frac{k(k+1)}{2}+k+1$.
+        On factorise : $=\frac{k(k+1)+2(k+1)}{2}=\frac{(k+1)(k+2)}{2}$ ;
+        formule vraie pour $k+1$. %\qedhere
+\end{itemize}
+
+\begin{exercice}[Induction et recherche dichotomique]
+\leavevmode\par
+\textbf{1.} Commentez chaque étape du pseudo-code suivant :
+\begin{lstlisting}[mathescape=true]
+RechercheDicho(A[0..n-1], x)
+    gauche ← 0, droite ← n-1
+    Tant que gauche ≤ droite faire
+        m ← ⌊(gauche+droite)/2⌋
+        Si A[m] = x alors retourner m
+        Sinon si A[m] < x alors gauche ← m+1
+                       sinon droite ← m-1
+    retourner -1                  // absent
+\end{lstlisting}
+\textbf{2.} Montrez par induction forte sur la taille du sous‑tableau que
+l’algorithme renvoie toujours l’indice de \(x\) s’il existe, et $-1$ sinon.
+\end{exercice}
+
+% **********************************************************************
+% ======================================================================
+\section{Relations de récurrence}
+% ----------------------------------------------------------------------
+%  Inspiré de : Cormen et al., *Introduction to Algorithms*, chap. 4 ;
+%               Kleinberg–Tardos, *Algorithm Design*, §2.1 ;
+%               Sedgewick–Wayne, *Algorithms*, §2.3.
+% ======================================================================
+
+%\subsection{Pourquoi des récurrences ?}
+Dès qu’un algorithme se définit \emph{sur lui-même} — via un appel récursif ou
+une division en sous-problèmes — son coût obéit à une \textbf{relation de
+récurrence}.  Résoudre cette équation, c’est transformer une description
+\emph{locale} (« coût d’un appel ») en une formule \emph{globale}
+\(T(n)\) qui vaut pour toute taille d’entrée.
+
+\subsection{Méthodes classiques de résolution}
+
+\begin{description}
+  \item[Déroulement (ou \textit{iteration method})]
+        On \emph{déplie} la récurrence plusieurs fois ; un motif apparaît
+        (somme arithmétique, géométrique…), que l’on additionne jusqu’à
+        atteindre le cas de base \(T(1)\).
+
+  \item[Substitution]\phantom{a}\\
+        \begin{enumerate}
+         \item Formuler une \emph{conjecture} raisonnable $f(n)$.
+         \item Prouver par induction (souvent forte) que $T(n)\le f(n)$ ou
+           $T(n)=f(n)$.
+        \end{enumerate}
+
+
+  \item[Arbre de récursion]
+        On dessine les appels comme un arbre : chaque niveau contient le coût
+        cumulé des sous-problèmes.  La somme des niveaux donne $T(n)$ et
+        révèle visuellement où se concentre la dépense (racine, feuilles, partout…).
+
+  \item[Théorème maître (\textbf{Master Theorem})]
+        Applicable aux récurrences $T(n)=aT(n/b)+f(n)$ avec $a\ge1$, $b>1$.
+        Trois cas ; la comparaison entre $f(n)$ et
+        \(n^{\log_b a}\) décide du résultat (voir tableau en annexe A).
+\end{description}
+
+% ----------------------------------------------------------------------
+\subsection{Exemple — Coût de la recherche dichotomique}
+
+\paragraph{Récurrence}
+\[
+T(n)=T\!\bigl(\tfrac{n}{2}\bigr)+1,\qquad T(1)=1.
+\]
+
+\begin{enumerate}[label=\alph*)]
+  \item \textbf{Déroulement}
+        \[
+        \begin{aligned}
+        T(n)&=T\!\bigl(\tfrac{n}{2}\bigr)+1\\
+             &=T\!\bigl(\tfrac{n}{4}\bigr)+1+1\\
+             &\;\;\vdots\\
+             &=T(1)+\underbrace{1+\cdots+1}_{k\text{ fois}}
+        \end{aligned}
+        \]
+        où \(n/2^{k}=1\Rightarrow k=\log_2 n\).
+        \(\Rightarrow T(n)=1+\log_2 n\in\Theta(\log n).\)
+
+  \item \textbf{Substitution rapide}
+        Hypothèse : \(T(n)\le c\log n\).
+        \(T(n)=T(n/2)+1\le c\log(n/2)+1
+               =c(\log n-1)+1\le c\log n\) dès que \(c\ge1\).
+
+  \item \textbf{Arbre de récursion}
+        Chaque niveau coûte exactement 1 comparaison ; il y a
+        \(\log_2 n+1\) niveaux $\Rightarrow$ même résultat.
+
+  \item \textbf{Théorème maître}
+        $a=1$, $b=2$, $f(n)=1$, \(n^{\log_b a}=1\).
+        Cas 2 $\Rightarrow$ \(T(n)=\Theta(\log n)\).
+\end{enumerate}
+
+\begin{exercice}[Discussion]
+Expliquez en une phrase pourquoi \(\log n\) apparaît inévitablement lorsqu’un
+algorithme divise la taille de l’entrée par 2 à chaque étape.
+\end{exercice}
+
+% ----------------------------------------------------------------------
+\begin{exercice}[Tri fusion]
+\textbf{Algorithme}
+\begin{lstlisting}
+MergeSort(A[0..n-1]):
+    si n ≤ 1 retourner
+    diviser A en moities de taille n/2
+    MergeSort(moitie_gauche)
+    MergeSort(moitie_droite)
+    fusionner les deux moities en temps lineaire n
+\end{lstlisting}
+
+\begin{enumerate}[label=\alph*)]
+  \item Établissez la récurrence numérique $T(n)$ (pensez : 2 sous-listes +
+        fusion).
+  \item Résolvez $T(n)$ par déroulement, substitution et théorème maître.
+  \item Comparez brièvement la lisibilité des trois démarches.
+\end{enumerate}
+\end{exercice}
+
+% ----------------------------------------------------------------------
+\begin{exercice}[Tri par insertion]
+\textbf{Algorithme}
+\begin{lstlisting}
+InsertionSort(A[0..n-1]):
+    pour i ← 1 a n-1:
+        cle ← A[i]; j ← i-1
+        tant que j ≥ 0 et A[j] > cle:
+            A[j+1] ← A[j]; j ← j-1
+        A[j+1] ← cle
+\end{lstlisting}
+
+\begin{enumerate}[label=\alph*)]
+  \item Modélisez le \emph{pire coût} $T(n)$ par une relation de récurrence
+        (indice : le $i$-ième passage décale au plus $i-1$ éléments).
+  \item Résolvez-la par déroulement pour obtenir l’ordre de grandeur
+        \(\Theta(n^{2})\).
+  \item En quoi le \emph{meilleur cas} diffère-t-il ? (réponse : $T(n)=\Theta(n)$)
+\end{enumerate}
+\end{exercice}
+
+
+% **********************************************************************
+\section{Notation asymptotique}
+
+% **********************************************************************
+\subsection{$\bigO$, $\Omega$, $\Theta$ — définitions formelles}
+
+Lorsque nous évaluons un algorithme, nous voulons savoir comment son
+temps d’exécution ou sa consommation mémoire \emph{croissent} avec la taille
+de l’entrée $n$.  Compter le nombre \emph{exact} d’opérations
+($3n^{2}+7n-4$, par exemple) serait trop précis : les constantes $3$, $7$ ou
+$4$ dépendent du langage, du processeur, parfois même du compilateur.
+Ce qui nous intéresse vraiment, c’est l’\textbf{ordre de grandeur} :
+le coût se comporte-t-il comme une droite ($n$), une parabole ($n^{2}$) ou,
+pire, une exponentielle ($2^{n}$) ?
+
+Les notations $\bigO$, $\Omega$ et $\Theta$ forment un langage standard pour
+exprimer ces ordres de grandeur en « oubliant » les détails machines et les
+constantes multiplicatives.  Elles permettent :
+\begin{itemize}
+  \item de comparer rapidement deux algorithmes : $\Theta(n\log n)$ battra
+        toujours $\Theta(n^{2})$ pour des entrées suffisamment grandes ;
+  \item d’estimer si un problème reste solvable quand l’entrée passe
+        de quelques milliers à plusieurs millions d’éléments ;
+  \item de raisonner sur la faisabilité \emph{avant} d’écrire la moindre
+        ligne de code.
+\end{itemize}
+En pratique, la notation asymptotique est donc la \emph{boussole} qui guide
+nos choix d’algorithmes et d’optimisations.
+
+
+\begin{description}
+  \item[Borne supérieure $\bigO$ : ]
+        \(f(n)\in\bigO\bigl(g(n)\bigr)\)
+        \(\Longleftrightarrow\) \(\exists\,C>0,\;\exists\,n_{0}\in\mathbb N,\;
+        \forall n\ge n_{0},\;f(n)\le C\,g(n).\)
+
+  \item[Borne inférieure $\Omega$ : ]
+        \(f(n)\in\Omega\bigl(g(n)\bigr)\)
+        \(\Longleftrightarrow\) \(\exists\,c>0,\;\exists\,n_{0},\;
+        \forall n\ge n_{0},\;f(n)\ge c\,g(n).\)
+
+  \item[Même ordre $\Theta$ : ]
+        \(f(n)\in\Theta\bigl(g(n)\bigr)\)
+        \(\Longleftrightarrow\) \(f\in\bigO(g)\) \emph{et}
+        \(f\in\Omega(g)\).
+        Autrement dit, $f$ est \emph{à la fois} bornée au-dessus et au-dessous
+        par $g$ à multiplicateur constant près.
+
+\end{description}
+
+\vspace{0.4em}
+\noindent
+\textbf{Remarque pratique.}  Lorsqu’on écrit qu’un algorithme tourne en
+$\bigO(n\log n)$, on déclare qu’il existe \emph{une} constante $C$ telle que,
+pour une entrée assez grande, son temps d’exécution ne dépasse jamais
+$C\,n\log n$.  Les détails machine-dépendants (vitesse CPU, langage, etc.)
+sont absorbés dans ce $C$.
+
+% ----------------------------------------------------------------------
+
+\begin{exercice}[Comparer des croissances]
+Classez les fonctions suivantes du plus lent au plus rapide :
+$\log n$, $n^{0.5}$, $n\log n$, $2^{n}$, $n!$, $n^{2}$.
+\end{exercice}
+
+% **********************************************************************
+
+
+% **********************************************************************
+\section{Probabilités élémentaires pour l’analyse d’algorithmes}
+
+\subsection{Pourquoi la probabilité en algorithmique ?}
+Nombre d’algorithmes modernes (Quicksort randomisé, algorithmes de Monte-Carlo,
+protocoles réseau) prennent des décisions au hasard ; leur \emph{coût} n’est
+plus déterministe.  Les outils probabilistes permettent alors de :
+\begin{itemize}
+  \item décrire la « loi » des temps d’exécution possibles ;
+  \item calculer une \textbf{espérance} (coût moyen) et parfois la probabilité
+        de dépasser un seuil critique ;
+  \item prouver qu’un algorithme est \emph{rapide avec grande probabilité}.
+\end{itemize}
+
+% ----------------------------------------------------------------------
+\subsection{Vocabulaire et axiomes de base}
+\begin{itemize}
+  \item \textbf{Univers} $\Omega$ : ensemble de tous les résultats possibles
+        d’une expérience aléatoire (ex. lancer un dé : $\{1,\dots,6\}$).
+  \item \textbf{Événement} $A\subseteq\Omega$ : sous-ensemble d’issues.
+  \item \textbf{Probabilité} \(\mathbb{P}[A]\) : fonction telle que
+        \(\mathbb{P}\bigl[\Omega\bigr]=1\) et, si $A,B$ disjoints,
+        \(\mathbb{P}[A\cup B]=\mathbb{P}[A]+\mathbb{P}[B]\).
+\end{itemize}
+
+\subsection{Espérance et variables indicatrices}
+\begin{description}
+  \item[Variable aléatoire] fonction $X:\Omega\to\mathbb{R}$ (ex. valeur
+        obtenue sur un dé).
+  \item[Espérance] \(\displaystyle \mathbb{E}[X]=\sum_{\omega\in\Omega}
+        X(\omega)\,\mathbb{P}[\{\omega\}].\)
+  \item[Linéarité] pour \emph{toutes} $X,Y$ :
+        \(\mathbb{E}[X+Y]=\mathbb{E}[X]+\mathbb{E}[Y]\) même si $X$ et $Y$
+        sont dépendantes.
+  \item[Indicateur] \(\mathbf{1}_{A}(\omega)=1\) si $\omega\in A$, sinon 0.
+        Utile pour compter : si $X=\sum_i \mathbf{1}_{A_i}$ alors
+        \(\mathbb{E}[X]=\sum_i \mathbb{P}[A_i]\).
+\end{description}
+
+\subsection{Petit exemple classique}
+Combien de lancers de pièce faut-il \emph{en moyenne} avant d’obtenir pile ?
+
+\[
+\mathbb{E}[X] = p\cdot1 + (1-p)p\cdot2 + (1-p)^{2}p\cdot3+\dots
+              = \frac{1}{p},
+\quad p=\tfrac12 \;\Rightarrow\; \mathbb{E}[X]=2.
+\]
+
+\subsection{Application : coût moyen d’une boucle aléatoire}
+Supposons une boucle qui se répète tant qu’un événement de probabilité
+\(p=\tfrac12\) ne se produit pas ; le travail à chaque itération vaut
+\(\alpha\).  Son coût moyen est
+\(\mathbb{E}[T]=\alpha\,\mathbb{E}[X]=2\alpha\).
+
+\begin{exercice}[Taille d’un préfixe aléatoire]
+On parcourt un tableau jusqu’à rencontrer la première valeur négative.
+Chaque cellule est négative avec probabilité $q=\tfrac14$, indépendamment
+des autres.  Calculez l’espérance du nombre de lectures effectuées.
+\end{exercice}
+
+\begin{reflexion}
+Pourquoi la linéarité de l’espérance est-elle particulièrement précieuse
+quand les variables sont dépendantes ?  Donne un exemple tiré d’un
+algorithme où cette propriété simplifie drastiquement le calcul.
+\end{reflexion}
+
+% **********************************************************************
+\section*{À retenir}
+
+\begin{itemize}
+  \item Sommes et logarithmes : les briques de base pour compter.
+  \item Induction : la preuve standard pour algorithmes et formules.
+  \item Récurrences : quatre outils (déroulement, substitution, arbre, maître).
+  \item Notation asymptotique : comparer les croissances sans se perdre
+        dans les constantes.
+  \item Espérance : mesurer le coût moyen des algorithmes randomisés.
+\end{itemize}
+% **********************************************************************
+% Liste de sept exercices progressifs (sans corrigés)
+% **********************************************************************
+
+\section{Exercices}
+\begin{exercice}[Somme arithmétique]
+Calculez, par induction simple, la valeur de la somme
+\(\displaystyle S(n)=\sum_{i=1}^{n}(2i-1)\)
+et vérifiez que \(S(n)\) est égale à \(n^{2}\).  %&#8203;:contentReference[oaicite:0]{index=0}
+\end{exercice}
+
+\begin{exercice}[Manipuler les logarithmes]
+Montrez que pour tout \(n\ge1\),
+\[
+\log_2(n!) \;=\; \Theta\!\bigl(n\log n\bigr).
+\]
+(On pourra encadrer la somme \(\sum_{k=1}^{n}\log_2 k\) par une intégrale.)  %&#8203;:contentReference[oaicite:1]{index=1}
+\end{exercice}
+
+\begin{exercice}[Induction forte et nombres de Fibonacci]
+Prouvez, par induction forte, que pour tout \(n\ge 0\),
+le \(n\)-ième nombre de Fibonacci vérifie
+\(F_{n}\le 2^{n}\).  %&#8203;:contentReference[oaicite:2]{index=2}
+\end{exercice}
+
+\begin{exercice}[Récurrence linéaire]
+Soit \(T(n)=3T(n-1)+2\) avec \(T(0)=4\).
+\begin{enumerate}[label=\alph*)]
+  \item Trouvez la forme fermée de \(T(n)\) par déroulement.
+  \item Donnez l’ordre de grandeur asymptotique de \(T(n)\).
+\end{enumerate} %&#8203;:contentReference[oaicite:3]{index=3}
+\end{exercice}
+
+\begin{exercice}[Complexité espérée d’un algorithme aléatoire]
+Un algorithme répète une opération coûtant une unité tant que
+un événement de probabilité \(p=\tfrac13\) ne se produit pas.
+Quel est le coût moyen de l’algorithme ?  %&#8203;:contentReference[oaicite:4]{index=4}
+\end{exercice}
+
+\begin{exercice}[MergeSort — récurrence à résoudre]
+Considérez l’algorithme \texttt{MergeSort} :
+\[
+T(n)=2\,T\!\bigl(\tfrac{n}{2}\bigr)+n,\qquad T(1)=1.
+\]
+\begin{enumerate}[label=\alph*)]
+  \item Résolvez la récurrence par la méthode du \emph{déroulement}.
+  \item Vérifiez votre résultat avec le théorème maître.
+\end{enumerate} %&#8203;:contentReference[oaicite:5]{index=5}
+\end{exercice}
+
+\begin{exercice}[InsertionSort — formuler la récurrence]
+\textbf{Algorithme}\\[-1.1em]
+\begin{lstlisting}
+InsertionSort(A[0..n-1]):
+    pour i ← 1 a n-1:
+        cle ← A[i]; j ← i-1
+        tant que j ≥ 0 et A[j] > cle:
+            A[j+1] ← A[j]; j ← j-1
+        A[j+1] ← cle
+\end{lstlisting}
+
+\begin{enumerate}[label=\alph*)]
+  \item Établissez la récurrence du \emph{pire cas} pour le coût $T(n)$.
+  \item Déduisez le classement de ce coût en notation~$\bigO$.
+\end{enumerate} %&#8203;:contentReference[oaicite:6]{index=6}
+\end{exercice}
+
+% ----------------------------------------------------------------------
+% Bibliographie locale (le .bib global suffit en vrai, mais on note ici)
+% ----------------------------------------------------------------------
+\begin{thebibliography}{9}
+\bibitem{Cormen2022} T.~Cormen, C.~Leiserson, R.~Rivest, and C.~Stein, \emph{Introduction to Algorithms}, 4th~ed., MIT Press, 2022.
+\end{thebibliography}
+
+% ----------------------------------------------------------------------
+% Fin du chapitre
+% ----------------------------------------------------------------------
