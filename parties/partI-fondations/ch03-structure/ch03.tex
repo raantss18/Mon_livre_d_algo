@@ -31,22 +31,83 @@ avant d’aborder les graphes ou les paradigmes de conception plus avancés.
 \end{itemize}\vspace{0.4em}
 
 % **********************************************************************
+% **********************************************************************
 \section{Tableau statique (\textit{array})}
 
 \subsection{Définition et propriétés}
-Un \textbf{tableau} est une zone de mémoire contiguë contenant $n$ cases,
-accessibles en $O(1)$ via un indice entier.
-Insertion et suppression au milieu coûtent $O(n)$ à cause du
-décalage des éléments.
+
+Un \textbf{tableau statique} (souvent appelé \emph{array} en C/C++)
+est un bloc de mémoire \emph{contiguë} réservé une seule fois :
+sa taille $n$ est fixée à la compilation ou lors de son
+allocation et ne peut plus changer ensuite.
+\begin{itemize}
+  \item \textbf{Accès aléatoire :} l’adresse de la case $i$ se calcule par
+        \texttt{base} $+\;i\times\texttt{sizeof(type)}$
+        $\Rightarrow$ lecture / écriture en \(\mathcal{O}(1)\).
+  \item \textbf{Insertion / suppression} au milieu nécessitent le décalage de
+        tous les éléments à droite $\Rightarrow\;\mathcal{O}(n)$ dans le
+        pire cas.
+  \item \textbf{Avantages :} compacité mémoire, excellent \emph{cache locality},
+        simplicité arithmétique.
+  \item \textbf{Inconvénient :} taille rigide, coût linéaire pour
+        réorganiser les données.
+\end{itemize}
 
 \begin{exercice}[Accès direct]
-Soit un tableau \lstinline|A| de 1 000 000 d’entiers.
+Soit un tableau \lstinline|A| de 1\,000\,000 d’entiers (32 bits).
 \begin{enumerate}[label=\alph*)]
-  \item Combien de lectures mémoire pour afficher \lstinline|A[723456]| ?
-  \item Pourquoi dit-on que le temps d’accès est \emph{constant} malgré la
-        taille massive du tableau ?
+  \item Combien d’opérations mémoire faut-il pour lire \lstinline|A[723456]| ?
+  \item Expliquez pourquoi on affirme que le temps d’accès est \emph{constant}
+        même avec un tableau aussi grand.
 \end{enumerate}
 \end{exercice}
+
+\paragraph{Solution}
+\begin{enumerate}[label=\alph*)]
+  \item Une seule : le processeur calcule l’adresse
+        \texttt{base + 723456 × 4} octets puis lit 4 octets
+        en un cycle de cache (idéalement).
+  \item La formule d’adressage dépend uniquement de $i$, pas de $n$ ;
+        elle exige un nombre fixe d’instructions arithmétiques, d’où la
+        notation \(\mathcal{O}(1)\).
+\end{enumerate}
+
+% ----------------------------------------------------------------------
+
+\begin{exercice}[Tableau statique en C++ \& calcul de somme]
+
+Déclarez un tableau statique de 10 entiers, initialisez‐le avec
+les valeurs $1$ à $10$ puis écrivez une fonction
+\lstinline|sumArray| qui renvoie la somme des éléments.
+Analysez la complexité.
+\end{exercice}
+
+\paragraph{Solution.}
+\begin{lstlisting}[language=C++,caption={array\_sum.cpp}]
+#include <cstddef>   // std::size_t
+#include <iostream>
+
+constexpr std::size_t N = 10;
+int main() {
+    int A[N] = {1,2,3,4,5,6,7,8,9,10};   // declaration
+                                         //   + initialisation
+
+    auto sumArray = [](const int* arr, std::size_t n) {
+        int s = 0;
+        for (std::size_t i = 0; i < n; ++i) s += arr[i]; // O(n)
+        return s;
+    };
+
+    std::cout << "Somme = " << sumArray(A, N) << '\n';
+                                        // affiche la somme
+}
+\end{lstlisting}
+
+\begin{itemize}
+  \item \lstinline|A| est stocké sur la pile ; son adresse de base est fixe.
+  \item La boucle effectue exactement $n$ lectures et additions
+        $\Rightarrow\; \mathcal{O}(n)$.
+\end{itemize}
 
 % **********************************************************************
 \section{Tableau dynamique (vector)}
@@ -56,10 +117,53 @@ Pour pallier la taille fixe d’un tableau, on utilise un
 \textbf{tableau dynamique} (ex. \lstinline|std::vector| en C++) qui s’agrandit
 automatiquement.
 
-\subsection{Amortised Analysis}
-Lorsqu’on dépasse la capacité, le vecteur double sa taille et copie les
-éléments ; cette opération rare rend le coût moyen d’un \lstinline|push_back|
-égal à $O(1)$ amorti.
+\subsection{Analyse amortie (\textit{Amortised Analysis})}
+
+L’idée fondamentale est de mesurer le \emph{coût moyen} d’une opération
+sur une longue séquence d’appels, plutôt que son pire cas isolé.
+
+\paragraph{Doublage de capacité.}
+Un \lstinline|std::vector| (ou tout tableau dynamique) maintient deux
+informations :
+\begin{itemize}
+  \item \texttt{size}  – nombre d’éléments actuellement stockés ;
+  \item \texttt{capacity} – taille maximale du bloc mémoire réservé.
+\end{itemize}
+Tant que \texttt{size} $<$ \texttt{capacity}, \lstinline|push_back|
+coûte $\mathcal{O}(1)$ : on écrit simplement à l’indice courant.
+Lorsque \texttt{size} == \texttt{capacity}, on :
+
+\begin{enumerate}
+  \item alloue un nouveau bloc deux fois plus grand ;
+  \item copie ou déplace les éléments dans le nouveau bloc ;
+  \item libère l’ancien bloc.
+\end{enumerate}
+
+Cette opération \emph{exceptionnelle} coûte $\mathcal{O}(n)$, mais
+elle n’arrive qu’après $n$ insertions en temps constant.
+Sur une séquence de $m$ insertions, le nombre total de copies est
+borné par $2m$ $\Rightarrow$ \emph{coût moyen} par insertion $=2$ soit
+$\mathcal{O}(1)$ \textbf{amorti}.
+
+\paragraph{Syntaxe minimale C++ (\texttt{push\_back})}
+
+\begin{lstlisting}[language=C++,caption={push\_back avec agrandissement}]
+void push_back(const T& value) {
+    if (sz_ == cap_) {            // plus de place ?
+        cap_ *= 2;                // double la capacite
+        T* bigger = new T[cap_];
+        std::move(data_, data_ + sz_, bigger); // copie/move O(sz_)
+        delete[] data_;
+        data_ = bigger;
+    }
+    data_[sz_++] = value;         // insertion O(1)
+}
+\end{lstlisting}
+
+Ici, le coût $\mathcal{O}(n)$ du \texttt{move} n’est payé qu’une seule
+fois pour les $n$ insertions qui précèdent.  L’analyse amortie garantit
+donc un temps \(\mathcal{O}(1)\) \emph{en moyenne} par appel
+\lstinline|push_back|.
 
 \begin{reflexion}
 Pourquoi la stratégie « doubler la taille » est-elle plus
@@ -69,10 +173,35 @@ efficace qu’ajouter une seule case à chaque débordement ?
 % **********************************************************************
 \section{Liste chaînée}
 
-\subsection{Définition}
-Une \textbf{liste simple} est une suite de nœuds contenant chacun une
-\lstinline|cle| et un pointeur vers le suivant.
-Insertion et suppression en tête coûtent $O(1)$, la recherche $O(n)$.
+
+Une \textbf{liste chaînée (singly-linked list)} est un ensemble ordonné de
+nœuds disposés en mémoire \emph{non contiguë}.
+Chaque nœud stocke :
+
+\begin{itemize}
+  \item une \lstinline|cle| (la valeur à conserver) ;
+  \item un seul pointeur, \lstinline|next|, qui indique l’adresse du nœud
+        suivant — ou \lstinline|nullptr{}| si l’on atteint la fin.
+\end{itemize}
+
+Le premier nœud est référencé par un pointeur \lstinline|head| ; on
+accède ensuite aux autres éléments en \emph{chaînant} les
+\lstinline|next| les uns après les autres.
+
+\paragraph{Complexité des opérations principales}
+\begin{description}
+  \item[Insertion en tête] créer un nœud et rediriger \lstinline|head|
+        \(\;\Rightarrow\; \mathcal{O}(1)\).
+  \item[Suppression en tête] déplacer \lstinline|head| sur
+        \lstinline|head->next| \(\;\Rightarrow\; \mathcal{O}(1)\).
+  \item[Recherche d’une clé] parcourir séquentiellement les nœuds
+        jusqu’à trouver la valeur ou atteindre la fin
+        \(\;\Rightarrow\; \mathcal{O}(n)\) dans le pire cas.
+\end{description}
+
+Ainsi, la liste chaînée sacrifie l’accès direct (pas d’indice comme
+dans un tableau) mais excelle pour les ajouts ou retraits fréquents
+au tout début de la structure.
 
 \begin{exercice}[Parcours]
 Écrire une fonction C++ qui renvoie la longueur d’une liste chaînée ;
@@ -193,8 +322,21 @@ File & $O(1)$ (\lstinline|front|) & $O(1)$ & — \\
 \end{center}
 
 % **********************************************************************
-\section*{Travail pratique – Implémenter un mini-container}
+% **********************************************************************
+\section*{À retenir}
 
+\begin{itemize}
+  \item \textbf{Tableau statique} : accès aléatoire en $\mathcal{O}(1)$, insertion/suppression au milieu en $\mathcal{O}(n)$.
+  \item \textbf{Tableau dynamique (\texttt{vector})} : \lstinline|push_back| en $\mathcal{O}(1)$ amorti grâce au doublage de capacité, redimensionnement en $\mathcal{O}(n)$.
+  \item \textbf{Liste chaînée simple} : insertion et suppression en tête en $\mathcal{O}(1)$, parcours et recherche en $\mathcal{O}(n)$.
+  \item \textbf{Pile (stack)} : opérations \lstinline|push|, \lstinline|pop| et \lstinline|top| en $\mathcal{O}(1)$ (LIFO).
+  \item \textbf{File (queue)} : opérations \lstinline|enqueue| et \lstinline|dequeue| en $\mathcal{O}(1)$ avec implémentation circulaire (FIFO).
+  \item \textbf{Choix de structure} : privilégier le tableau ou la liste selon la fréquence des accès aléatoires vs des insertions/suppressions rapides.
+\end{itemize}
+
+
+% **********************************************************************
+\section*{Exercices}
 \begin{tp}[Mini STL simplifiée]
 \textbf{Objectif.}  Produire une bibliothèque C++ \lstinline|ministl::|
 contenant :
@@ -212,8 +354,6 @@ contenant :
 \end{enumerate}
 \end{tp}
 
-% **********************************************************************
-\section*{Exercices supplémentaires}
 
 \begin{exercice}
 Expliquez pourquoi l’accès \lstinline|A[i]| dans un tableau statique
@@ -231,17 +371,68 @@ au lieu de \emph{×2} pour un tableau dynamique.
 \end{exercice}
 
 % **********************************************************************
-\section*{Questions de réflexion}
 
-\begin{reflexion}
-Pourquoi la pile et la file, bien qu’implémentables avec un tableau,
-sont-elles souvent construites sur une liste chaînée dans les OS ?
-\end{reflexion}
 
-\begin{reflexion}
-Comment la notion de \emph{cache} influence-t-elle réellement le choix
-entre tableau et liste dans les algorithmes modernes ?
-\end{reflexion}
+\begin{exercice}[Adresse et accès dans un tableau]
+Soit un tableau statique d’entiers \lstinline|int A[100]| dont l’adresse de base
+est \lstinline|0x1000| et dont chaque entier occupe 4 octets.
+Écrivez l’expression de l’adresse de \lstinline|A[i]| en hexadécimal, puis
+expliquez pourquoi l’accès à cet élément se fait en temps constant
+\(\mathcal{O}(1)\).
+\end{exercice}
+
+\begin{exercice}[Longueur d’une liste chaînée]
+Écrivez en C++ une fonction
+\lstinline|std::size_t length(Node* head)| qui renvoie le nombre de nœuds
+d’une liste chaînée simple. Analysez rigoureusement sa complexité
+(en pire cas et au meilleur cas).
+\end{exercice}
+
+\begin{exercice}[Pile avec vecteur]
+Vous voulez implémenter une pile LIFO en utilisant \lstinline|std::vector<T>|.
+Décrivez les algorithmes de \lstinline|push|, \lstinline|pop| et
+\lstinline|top|, puis donnez leur complexité temporelle (pire cas et amortie
+pour \lstinline|push|).
+\end{exercice}
+
+\begin{exercice}[Analyse amortie — +10 \%]
+On adopte pour un tableau dynamique la stratégie suivante : lorsqu’il est plein,
+on augmente sa capacité de 10 \% (au lieu de la doubler).
+Démontrez que le coût amorti d’un \lstinline|push_back| reste \(\mathcal{O}(1)\)
+et calculez la constante approximative dans votre majoration.
+\end{exercice}
+
+\begin{exercice}[File circulaire — complexité]
+On stocke les éléments dans un buffer circulaire de capacité fixe
+\lstinline|CAP|, avec indices \lstinline|head| et \lstinline|tail|.
+Expliquez pourquoi les opérations \lstinline|enqueue| et \lstinline|dequeue|
+s’exécutent en \(\mathcal{O}(1)\) dans le pire cas (sans amortissement).
+\end{exercice}
+
+
+\begin{tp}[Simulation d’historique de navigation Web]
+\textbf{Objectif :} modéliser l’historique d’un navigateur avec deux piles
+(\lstinline|back| et \lstinline|forward|), et permettre les opérations :
+\begin{itemize}
+  \item \lstinline|visit(url)| : visiter une nouvelle URL (vide la pile \lstinline|forward|).
+  \item \lstinline|back()| : revenir à la page précédente (pop/push entre piles).
+  \item \lstinline|forward()| : avancer si un retour a été effectué.
+  \item \lstinline|current()| : obtenir l’URL courante.
+\end{itemize}
+\textbf{Étapes :}
+\begin{enumerate}
+  \item Déclarez une classe \lstinline|BrowserHistory| avec deux
+        \lstinline|std::stack<std::string>|.
+  \item Implémentez chacune des opérations ci-dessus, en vérifiant les
+        conditions de pile vide.
+  \item Rédigez un programme de test interactif : lecture de commandes
+        \lstinline|visit|, \lstinline|back|, \lstinline|forward|,
+        affichage de \lstinline|current|.
+  \item Mesurez la complexité de chaque opération et justifiez qu’elles sont
+        toutes en temps constant \(\mathcal{O}(1)\).
+\end{enumerate}
+\end{tp}
+
 
 % ----------------------------------------------------------------------
 % Fin du chapitre

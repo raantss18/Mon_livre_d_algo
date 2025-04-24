@@ -212,48 +212,6 @@ Expliquez en une phrase pourquoi \(\log n\) apparaît inévitablement lorsqu’u
 algorithme divise la taille de l’entrée par 2 à chaque étape.
 \end{exercice}
 
-% ----------------------------------------------------------------------
-\begin{exercice}[Tri fusion]
-\textbf{Algorithme}
-\begin{lstlisting}
-MergeSort(A[0..n-1]):
-    si n ≤ 1 retourner
-    diviser A en moities de taille n/2
-    MergeSort(moitie_gauche)
-    MergeSort(moitie_droite)
-    fusionner les deux moities en temps lineaire n
-\end{lstlisting}
-
-\begin{enumerate}[label=\alph*)]
-  \item Établissez la récurrence numérique $T(n)$ (pensez : 2 sous-listes +
-        fusion).
-  \item Résolvez $T(n)$ par déroulement, substitution et théorème maître.
-  \item Comparez brièvement la lisibilité des trois démarches.
-\end{enumerate}
-\end{exercice}
-
-% ----------------------------------------------------------------------
-\begin{exercice}[Tri par insertion]
-\textbf{Algorithme}
-\begin{lstlisting}
-InsertionSort(A[0..n-1]):
-    pour i ← 1 a n-1:
-        cle ← A[i]; j ← i-1
-        tant que j ≥ 0 et A[j] > cle:
-            A[j+1] ← A[j]; j ← j-1
-        A[j+1] ← cle
-\end{lstlisting}
-
-\begin{enumerate}[label=\alph*)]
-  \item Modélisez le \emph{pire coût} $T(n)$ par une relation de récurrence
-        (indice : le $i$-ième passage décale au plus $i-1$ éléments).
-  \item Résolvez-la par déroulement pour obtenir l’ordre de grandeur
-        \(\Theta(n^{2})\).
-  \item En quoi le \emph{meilleur cas} diffère-t-il ? (réponse : $T(n)=\Theta(n)$)
-\end{enumerate}
-\end{exercice}
-
-
 % **********************************************************************
 \section{Notation asymptotique}
 
@@ -392,12 +350,12 @@ algorithme où cette propriété simplifie drastiquement le calcul.
 \section*{À retenir}
 
 \begin{itemize}
-  \item Sommes et logarithmes : les briques de base pour compter.
-  \item Induction : la preuve standard pour algorithmes et formules.
-  \item Récurrences : quatre outils (déroulement, substitution, arbre, maître).
-  \item Notation asymptotique : comparer les croissances sans se perdre
+  \item \textbf{Sommes et logarithmes }: les briques de base pour compter.
+  \item \textbf{Induction }: la preuve standard pour algorithmes et formules.
+  \item \textbf{Récurrences }: quatre outils (déroulement, substitution, arbre, maître).
+  \item \textbf{Notation asymptotique }: comparer les croissances sans se perdre
         dans les constantes.
-  \item Espérance : mesurer le coût moyen des algorithmes randomisés.
+  \item \textbf{Espérance }: mesurer le coût moyen des algorithmes randomisés.
 \end{itemize}
 % **********************************************************************
 % Liste de sept exercices progressifs (sans corrigés)
@@ -438,16 +396,6 @@ un événement de probabilité \(p=\tfrac13\) ne se produit pas.
 Quel est le coût moyen de l’algorithme ?  %&#8203;:contentReference[oaicite:4]{index=4}
 \end{exercice}
 
-\begin{exercice}[MergeSort — récurrence à résoudre]
-Considérez l’algorithme \texttt{MergeSort} :
-\[
-T(n)=2\,T\!\bigl(\tfrac{n}{2}\bigr)+n,\qquad T(1)=1.
-\]
-\begin{enumerate}[label=\alph*)]
-  \item Résolvez la récurrence par la méthode du \emph{déroulement}.
-  \item Vérifiez votre résultat avec le théorème maître.
-\end{enumerate} %&#8203;:contentReference[oaicite:5]{index=5}
-\end{exercice}
 
 \begin{exercice}[InsertionSort — formuler la récurrence]
 \textbf{Algorithme}\\[-1.1em]
@@ -466,12 +414,6 @@ InsertionSort(A[0..n-1]):
 \end{enumerate} %&#8203;:contentReference[oaicite:6]{index=6}
 \end{exercice}
 
-% ----------------------------------------------------------------------
-% Bibliographie locale (le .bib global suffit en vrai, mais on note ici)
-% ----------------------------------------------------------------------
-\begin{thebibliography}{9}
-\bibitem{Cormen2022} T.~Cormen, C.~Leiserson, R.~Rivest, and C.~Stein, \emph{Introduction to Algorithms}, 4th~ed., MIT Press, 2022.
-\end{thebibliography}
 
 % ----------------------------------------------------------------------
 % Fin du chapitre
