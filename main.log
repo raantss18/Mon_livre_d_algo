@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2026/dev/Arch Linux) (preloaded format=pdflatex 2025.3.23)  24 APR 2025 18:57
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2026/dev/Arch Linux) (preloaded format=pdflatex 2025.3.23)  24 APR 2025 19:09
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1419,11 +1419,6 @@ LaTeX Font Info:    Font shape `U/ntxexa/m/n' will be
 (Font)              scaled to size 8.8pt on input line 3.
 LaTeX Font Info:    Font shape `U/ntxexa/m/n' will be
 (Font)              scaled to size 6.6pt on input line 3.
-
-
-[2
-
-]
 LaTeX Font Info:    Font shape `T1/ntxtlf/m/it' will be
 (Font)              scaled to size 12.0pt on input line 41.
 )
@@ -1432,27 +1427,12 @@ LaTeX Font Info:    Font shape `T1/ntxtlf/m/it' will be
 
 
 
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[3]
-
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[4
+[2
 
 ] (./parties/partI-fondations/partI-fondations.tex
 
 [1
+
 
 ]
 
@@ -1635,39 +1615,6 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 [10]
 
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 261.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 261.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 261.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\Omega' on input line 261.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 261.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 261.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\Theta' on input line 261.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 261.
-
-
-
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -1730,43 +1677,6 @@ LaTeX Font Info:    Font shape `T1/ntxtlf/b/it' will be
 
 [17]
 
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\leavevmode@ifvmode' on input line 112.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                \kern 2.00043pt
-(hyperref)                removed on input line 112.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\leavevmode@ifvmode' on input line 112.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                \kern 2.00043pt
-(hyperref)                removed on input line 112.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\leavevmode@ifvmode' on input line 112.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                \kern 2.00043pt
-(hyperref)                removed on input line 112.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\leavevmode@ifvmode' on input line 112.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                \kern 2.00043pt
-(hyperref)                removed on input line 112.
-
-
-
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -1775,9 +1685,6 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [18]
-LaTeX Font Info:    Font shape `T1/ntxtlf/b/n' will be
-(Font)              scaled to size 10.95pt on input line 158.
-
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1787,13 +1694,28 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [19]
+LaTeX Font Info:    Font shape `T1/ntxtlf/b/n' will be
+(Font)              scaled to size 10.95pt on input line 184.
+
+Underfull \vbox (badness 1158) has occurred while \output is active []
+
+
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[20]
 LaTeX Font Info:    Trying to load font information for TS1+ntxtlf on input lin
-e 204.
+e 230.
  (/usr/share/texmf-dist/tex/latex/newtx/ts1ntxtlf.fd
 File: ts1ntxtlf.fd 2015/01/18 v1.0 fd file for TS1/ntxtlf
 )
 LaTeX Font Info:    Font shape `TS1/ntxtlf/m/it' will be
-(Font)              scaled to size 12.0pt on input line 204.
+(Font)              scaled to size 12.0pt on input line 230.
 ))
 (./parties/partII-structures/partII-structures.tex)
 (./parties/partIII-paradigmes/partIII-paradigmes.tex)
@@ -1810,15 +1732,24 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[20{/usr/share/texmf-dist/fonts/enc/dvips/tex-gyre/q-ts1.enc}]
+[21{/usr/share/texmf-dist/fonts/enc/dvips/tex-gyre/q-ts1.enc}]
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[22
+
+]
 
 LaTeX Warning: Empty `thebibliography' environment on input line 3.
 
 )
 
-[21
-
-] (./main.aux)
+[23] (./main.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2020/03/25>
@@ -1828,16 +1759,16 @@ L3 programming layer <2020/03/25>
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: FAF235F4CC41EFEA6FE4C29A3529446D;9931.
+(rerunfilecheck)             Checksum: 4F20517645F0752D2F4D7EA380FABD00;4572.
  ) 
 Here is how much of TeX's memory you used:
- 40644 strings out of 475101
- 772596 string characters out of 5764995
- 1228810 words of memory out of 5000000
- 62562 multiletter control sequences out of 15000+600000
+ 40667 strings out of 475101
+ 772740 string characters out of 5764995
+ 1227771 words of memory out of 5000000
+ 62561 multiletter control sequences out of 15000+600000
  734274 words of font info for 281 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 89i,14n,123p,1001b,1555s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 89i,14n,123p,1001b,2184s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf-dist/fonts/type1/public/fontawesome/FontAwesome.pfb></usr/s
 hare/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4b.pfb></usr/share
 /texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></usr/share/tex
@@ -1853,10 +1784,10 @@ texmf-dist/fonts/type1/public/newtx/txsys.pfb></usr/share/texmf-dist/fonts/type
 1/public/newtx/ztmb.pfb></usr/share/texmf-dist/fonts/type1/public/newtx/ztmbi.p
 fb></usr/share/texmf-dist/fonts/type1/public/newtx/ztmr.pfb></usr/share/texmf-d
 ist/fonts/type1/public/newtx/ztmri.pfb>
-Output written on main.pdf (25 pages, 414045 bytes).
+Output written on main.pdf (25 pages, 415340 bytes).
 PDF statistics:
- 694 PDF objects out of 1000 (max. 8388607)
- 599 compressed objects within 6 object streams
- 221 named destinations out of 1000 (max. 500000)
- 54813 words of extra memory for PDF output out of 61914 (max. 10000000)
+ 618 PDF objects out of 1000 (max. 8388607)
+ 523 compressed objects within 6 object streams
+ 245 named destinations out of 1000 (max. 500000)
+ 54605 words of extra memory for PDF output out of 61914 (max. 10000000)
 

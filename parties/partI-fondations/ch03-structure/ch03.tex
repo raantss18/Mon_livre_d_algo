@@ -149,6 +149,32 @@ Implémentez un buffer circulaire de taille fixe ; démontrez que
 \lstinline|enqueue|/\lstinline|dequeue| sont $O(1)$.
 \end{exercice}
 
+\paragraph{Solution : }
+\begin{lstlisting}[language=C++,caption={\texttt{circular\_queue.hpp}}]
+template<class T, std::size_t CAP>
+class CircularQueue {
+public:
+    CircularQueue() : front_{0}, sz_{0} {}
+
+    bool enqueue(const T& v) {                // O(1)
+        if (sz_ == CAP) return false;         // plein
+        std::size_t rear = (front_ + sz_) % CAP;
+        buf_[rear] = v; ++sz_;
+        return true;
+    }
+    bool dequeue() {                          // O(1)
+        if (sz_ == 0) return false;           // vide
+        front_ = (front_ + 1) % CAP; --sz_;
+        return true;
+    }
+    const T& front() const { return buf_[front_]; }
+    bool empty() const noexcept { return sz_ == 0; }
+private:
+    T           buf_[CAP];
+    std::size_t front_, sz_;
+};
+\end{lstlisting}
+
 % **********************************************************************
 \section{Comparatif rapide}
 
