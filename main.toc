@@ -1,1 +1,16 @@
 \babel@toc {french}{}\relax 
+\contentsline {part}{I\hspace {1em}Les fondations de l'algorithme}{1}{part.1}%
+\contentsline {chapter}{\numberline {1}Algorithmes et programmes : notions fondamentales}{3}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Motivation : pourquoi les algorithmes ?}{3}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Définitions de base}{3}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}Algorithme}{3}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.2}Programme}{3}{subsection.1.2.2}%
+\contentsline {subsection}{\numberline {1.2.3}Implémentation vs. Spécification}{4}{subsection.1.2.3}%
+\contentsline {section}{\numberline {1.3}Premier exemple : l'algorithme d'Euclide}{4}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}Pseudo‑code}{4}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}Implémentation C++}{4}{subsection.1.3.2}%
+\contentsline {subsection}{\numberline {1.3.3}Analyse de complexité}{5}{subsection.1.3.3}%
+\contentsline {section}{\numberline {1.4}Introduction aux notions de coût}{5}{section.1.4}%
+\contentsline {subsection}{\numberline {1.4.1}Temps d'exécution}{5}{subsection.1.4.1}%
+\contentsline {subsection}{\numberline {1.4.2}Mémoire utilisée}{5}{subsection.1.4.2}%
+\contentsline {section}{\numberline {1.5}Étude de cas guidée}{5}{section.1.5}%

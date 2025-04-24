@@ -1,10 +1,97 @@
-% packages.tex — packages partagés
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage[french]{babel}
-\usepackage{amsmath,amssymb,amsfonts}
-\usepackage{graphicx}
-\usepackage{xcolor}
-\usepackage{listings}
-\usepackage{tikz}
+% ==================================================================
+%  packages.tex – Préambule partagé pour le livre d’algorithmique
+%  Compatible pdfLaTeX ; bascule automatiquement vers Xe/Lua si dispo
+% ==================================================================
+
+% ------------------------------------------------------------------
+% Encodage & langue
+% ------------------------------------------------------------------
+\usepackage[utf8]{inputenc}   % Encodage source (pdfLaTeX)
+\usepackage[T1]{fontenc}      % Codage des fontes
+\usepackage[french]{babel}    % Césure & typographie FR
+\usepackage{csquotes}         % Guillemets intelligents
+\usepackage{microtype}        % Micro-typographie (protrusion, expansion)
+
+% ------------------------------------------------------------------
+% Polices modernes lisibles
+% ------------------------------------------------------------------
+\usepackage{lmodern}          % Texte (Latin Modern)
+\usepackage[scaled]{inconsolata} % Monospace (Inconsolata) – listings
+\usepackage{newtxmath,newtxtext}  % Math joli + texte plus compact
+
+% ------------------------------------------------------------------
+% Mise en page & hyperliens
+% ------------------------------------------------------------------
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{fancyhdr}         % En-têtes/pieds de page
+\usepackage{titlesec}         % Personnalisation titres
+\usepackage{tocloft}          % TOC raffiné
+\usepackage{enumitem}         % Listes compactes
 \usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=Maroon,
+  citecolor=ForestGreen,
+  urlcolor=RoyalBlue,
+  pdfstartview=FitH,
+  pdfauthor={Antsa Raniriamanjaka},
+  pdftitle={Algorithmique – Cours, Exercices, TP}
+}
+
+% ------------------------------------------------------------------
+% Graphiques, couleurs, TikZ
+% ------------------------------------------------------------------
+\usepackage{xcolor}
+\definecolor{DarkBlue}{HTML}{002B63}
+\definecolor{RoyalBlue}{HTML}{0066CC}
+\definecolor{ForestGreen}{HTML}{228833}
+\definecolor{Maroon}{HTML}{882255}
+\definecolor{LightGray}{HTML}{F2F2F2}
+
+\usepackage{etoolbox}   % Tests sur arguments vides
+
+
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,graphs}
+
+% ------------------------------------------------------------------
+% Code & algorithmes
+% ------------------------------------------------------------------
+\usepackage{listings}
+\lstdefinestyle{algocpp}{
+  language=C++,
+  basicstyle=\small\ttfamily,
+  keywordstyle=\color{RoyalBlue}\bfseries,
+  commentstyle=\color{ForestGreen}\itshape,
+  stringstyle=\color{Maroon},
+  numbers=left, numberstyle=\tiny, stepnumber=1,
+  backgroundcolor=\color{LightGray},
+  frame=single, framerule=0pt,
+  tabsize=2, showstringspaces=false,
+  captionpos=b
+}
+\lstset{style=algocpp}
+
+% ------------------------------------------------------------------
+% Boîtes colorées pour TP/Exercices
+% ------------------------------------------------------------------
+\usepackage[skins,breakable,most]{tcolorbox}
+\tcbset{
+  enhanced,
+  sharp corners=all,
+  boxrule=0pt,
+  colback=LightGray,
+  colframe=DarkBlue,
+  coltitle=DarkBlue,
+  fonttitle=\bfseries\large,
+  before skip=1em, after skip=1em
+}
+
+% ------------------------------------------------------------------
+% Réglages diverses utiles
+% ------------------------------------------------------------------
+\setcounter{tocdepth}{2}      % Jusqu'au niveau \section dans la TOC
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.6em}
+\renewcommand{\baselinestretch}{1.08}

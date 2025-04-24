@@ -1,0 +1,165 @@
+% ======================================================================
+%  Chapitre 1 – Algorithmes et Programmes (Partie I : Fondations)
+%  Ce fichier repose sur packages.tex & macros.tex inclus dans le préambule
+% ======================================================================
+
+\chapter{Algorithmes et programmes : notions fondamentales}
+
+% ----------------------------------------------------------------------
+% Mise en bouche (citation / épigraphe)
+% ----------------------------------------------------------------------
+\begin{flushright}\small
+« Un programme n'est qu'un algorithme écrit dans une langue que la machine
+comprend. »\\[-0.2em]
+— \textit{Donald E. Knuth}
+\end{flushright}
+
+\section*{Objectifs du chapitre}
+\begin{itemize}[label=\small$\blacktriangleright$]
+  \item Comprendre la différence entre \emph{algorithme}, \emph{programme} et \emph{implémentation}.
+  \item Savoir exprimer un algorithme sous forme de pseudo‑code clair.
+  \item Introduire les premières notions de coût temporel et spatial.
+  \item Illustrer la démarche d'analyse sur quelques exemples classiques.
+\end{itemize}
+\vspace{0.5em}
+
+% **********************************************************************
+\section{Motivation : pourquoi les algorithmes ?}
+
+Les algorithmes sont les \og recettes \fg{} qui transforment des données d'entrée
+en résultats d'intérêt. Ils :
+\begin{enumerate}
+  \item offrent un \textbf{langage universel} pour décrire la résolution de problèmes ;
+  \item permettent de \textbf{prouver} qu'une méthode est correcte ;
+  \item servent de base à la \textbf{mesure de performance} que l'on optimisera
+        ensuite ;
+  \item constituent un pont naturel entre \emph{mathématiques} et \emph{informatique}.
+\end{enumerate}
+
+\begin{reflexion}
+Peut‑on imaginer un domaine scientifique ou industriel qui n'utilise aucun
+algorithme ? Discutez.
+\end{reflexion}
+
+% **********************************************************************
+\section{Définitions de base}
+
+\subsection{Algorithme}
+Un \emph{algorithme} est une \textbf{suite finie d'instructions}, non ambiguës,
+qui s'exécutent dans un ordre déterminé et qui, appliquées à des données
+appartenant à un ensemble \(D\), produisent un résultat dans un ensemble
+\(R\) après un nombre fini d'étapes.
+
+\subsection{Programme}
+Un \emph{programme} est l'\textbf{implantation} concrète d'un algorithme dans un
+langage (C++, Python, \dots) compréhensible par une machine.
+
+\subsection{Implémentation vs. Spécification}
+La spécification décrit \emph{ce que} doit faire le logiciel ; l'implémentation
+précise \emph{comment} le réaliser. Ces deux niveaux doivent être soigneusement
+dissociés.
+
+\begin{exercice}[Spécification ou implémentation ?]
+Pour chacun des énoncés suivants, dites s'il s'agit d'une spécification ou
+d'une implémentation et justifiez :
+\begin{enumerate}[label=\alph*)]
+  \item Trier un tableau d'entiers en ordre croissant.
+  \item Répéter \lstinline|n-1| fois : balayer le tableau et échanger les valeurs
+des positions \lstinline|i| et \lstinline|i+1| si elles sont mal ordonnées.
+  \item Calculer \(\gcd(a,b)\), le plus grand commun diviseur de deux entiers.
+\end{enumerate}
+\end{exercice}
+
+% **********************************************************************
+\section{Premier exemple : l'algorithme d'Euclide}
+
+\subsection{Pseudo‑code}
+\begin{lstlisting}[caption={Algorithme d'Euclide (version itérative)}]
+Entr\'ee  : deux entiers strictement positifs a, b (a > b)
+Sortie  : g = pgcd(a, b)
+
+g <- a, h <- b
+Tant que h != 0 faire
+    r <- g mod h
+    g <- h
+    h <- r
+Retourner g
+\end{lstlisting}
+
+\subsection{Implémentation C++}
+\begin{lstlisting}[language=C++,caption=euclid.cpp]
+#include <iostream>
+std::uint64_t pgcd(std::uint64_t a, std::uint64_t b) {
+    while (b != 0) {
+        auto r = a % b;
+        a = b;
+        b = r;
+    }
+    return a;
+}
+int main() {
+    std::uint64_t x{}, y{};
+    std::cin >> x >> y;
+    std::cout << pgcd(x, y) << "\n";
+}
+\end{lstlisting}
+
+\subsection{Analyse de complexité}
+Le nombre d'itérations est borné par \(5\log_{10}(b)\) (propriété de Lamé).
+Ainsi l'algorithme s'exécute en temps \(\bigO(\log\min(a,b))\) et en espace
+constante.
+
+\begin{reflexion}
+Pourquoi l'algorithme d'Euclide est‑il \og optimal \fg{} pour le
+\textsc{PGCD} sur des architectures classiques ?
+\end{reflexion}
+
+% **********************************************************************
+\section{Introduction aux notions de coût}
+
+\subsection{Temps d'exécution}
+On compte le nombre d'opérations élémentaires en fonction de la taille des
+données :\ \(n\) (longueur du tableau, nombre de bits, $\dots$). L'objectif :
+trouver une borne asymptotique — généralement $\bigO$.
+
+\subsection{Mémoire utilisée}
+Même démarche que pour le temps ; certaines optimisations échangent espace et
+temps.
+
+\begin{exercice}[]
+\textbf{a)} Proposez une version récursive et une version itérative de la
+factorielle \(n!\).\\
+\textbf{b)} Analysez leurs complexités (temps et espace).
+\end{exercice}
+
+% **********************************************************************
+\section{Étude de cas guidée}
+
+\begin{tp}[De l'algorithme au programme]
+\textbf{Objectif :} implémenter une mini‑bibliothèque C++ offrant
+\lstinline|pgcd|, \lstinline|ppcm| et \lstinline|factorielle|, accompagnée de
+tests unitaires (Catch2).
+
+\textbf{Étapes :}
+\begin{enumerate}
+  \item Écrire un \emph{header} \lstinline|arith.hpp| déclarant les fonctions.
+  \item Créer \lstinline|arith.cpp| avec les implémentations (pas de récursion
+        inutile).
+  \item Configurer un \lstinline|CMakeLists.txt| minimal.
+  \item Rédiger des cas de tests (valeurs limites : 0, 1, grands entiers).
+  \item Mesurer le temps avec \lstinline|std::chrono| pour des entrées croissantes.
+\end{enumerate}
+\end{tp}
+
+% **********************************************************************
+\section*{À retenir}
+\begin{itemize}
+  \item Un \emph{algorithme} est une séquence finie d'étapes déterministes.
+  \item Un \emph{programme} implémente un algorithme dans un langage cible.
+  \item Toute étude d'algorithme passe par la \textbf{preuve de correction} et
+        l'\textbf{analyse de complexité}.
+\end{itemize}
+
+% ----------------------------------------------------------------------
+% Fin du chapitre
+% ----------------------------------------------------------------------

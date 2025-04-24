@@ -1,4 +1,112 @@
-% macros.tex — environnements personnalisés
-\newtheorem{exercice}{Exercice}[chapter]
-\newenvironment{solution}{\par\noindent\textbf{Solution.\ }}{\vspace{1em}}
-\lstset{basicstyle=\ttfamily,frame=single}
+% ==================================================================
+%  macros.tex – Commandes & environnements personnalisés
+% ==================================================================
+
+% ------------------------------------------------------------------
+% Titres plus élégants
+% ------------------------------------------------------------------
+\titleformat{\chapter}
+  {\normalfont\Huge\bfseries\color{DarkBlue}}
+  {\thechapter}{1em}{}
+\titlespacing*{\chapter}{0pt}{-0.5cm}{1cm}
+
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{DarkBlue}}
+  {\thesection}{0.75em}{}
+
+% ------------------------------------------------------------------
+% En-têtes / pieds de page
+% ------------------------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[LO]{\nouppercase{\rightmark}}
+\fancyhead[RE]{\nouppercase{\leftmark}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% ------------------------------------------------------------------
+% Environnements pédagogiques
+% ------------------------------------------------------------------
+% ----- Compteur ------------------------------------------------------
+% =====================================================================
+%  Exercice
+% =====================================================================
+\newcounter{exercice}[chapter]
+
+\newtcolorbox{exercicebox}[2][]{
+  enhanced,               % active les calques titre/corps
+  breakable,              % coupure de page autorisée
+  sharp corners,
+  colframe=DarkBlue,
+  colback=LightGray!50,
+  colbacktitle=DarkBlue!15,
+  coltitle=DarkBlue!90!black,
+  fonttitle=\bfseries,
+  title={Exercice~\thechapter.\theexercice%
+         \ifstrempty{#2}{}{\;--\;#2}},
+  #1,                     % options supplémentaires éventuelles
+  before skip=1em, after skip=1em,
+  left=2mm, right=2mm, top=1mm, bottom=1mm,
+}
+
+\newenvironment{exercice}[1][]%
+  {\refstepcounter{exercice}\begin{exercicebox}{#1}}%
+  {\end{exercicebox}}
+
+% =====================================================================
+%  Travail pratique (TP)
+% =====================================================================
+\newcounter{tp}[chapter]
+
+\newtcolorbox{tpbox}[2][]{
+  enhanced,
+  breakable,
+  sharp corners,
+  colframe=Maroon,
+  colback=LightGray!40,
+  colbacktitle=Maroon!15,
+  coltitle=Maroon!90!black,
+  fonttitle=\bfseries,
+  title={Travail~pratique~\thechapter.\thetp%
+         \ifstrempty{#2}{}{\;--\;#2}},
+  #1,
+  before skip=1em, after skip=1em,
+  left=2mm, right=2mm, top=1mm, bottom=1mm,
+}
+
+\newenvironment{tp}[1][]%
+  {\refstepcounter{tp}\begin{tpbox}{#1}}%
+  {\end{tpbox}}
+
+% Environnement "réflexion"
+
+\newtcolorbox{reflexion}{
+  colback=ForestGreen!10,
+  colframe=ForestGreen,
+  title=\faLightbulbO~Question de réflexion,
+  fonttitle=\bfseries,
+  before skip=1em, after skip=1em
+}
+
+% ------------------------------------------------------------------
+% Raccourcis mathématiques fréquents
+% ------------------------------------------------------------------
+\newcommand{\bigO}{\mathcal{O}}
+\newcommand{\NP}{\textsf{NP}}
+\newcommand{\Pclass}{\textsf{P}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+
+% ------------------------------------------------------------------
+% Inclusion simplifiée de listings
+% ------------------------------------------------------------------
+\newcommand{\codefile}[2][]{%
+  \lstinputlisting[caption={\detokenize{#2}},#1]{#2}%
+}
+
+% ------------------------------------------------------------------
+% Icônes FontAwesome pour pimenter (optionnel)
+% ------------------------------------------------------------------
+\usepackage{fontawesome}
+
