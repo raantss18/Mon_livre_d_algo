@@ -16,6 +16,10 @@
 — \textit{Carl Friedrich Gauss}
 \end{flushright}
 
+Un algorithme n’est pas seulement un bout de code ; c’est une idée
+\emph{prouvable}. Les mathématiques servent : à \textbf{décrire} précisément le problème et l’algorithme, \textbf{démontrer} sa correction (le résultat est toujours bon) et \textbf{quantifier} ses ressources (temps, mémoire, bande passante, énergie).
+
+
 \section*{Objectifs du chapitre}
 \begin{itemize}[label=\small$\blacktriangleright$]
   \item Poser les briques mathématiques indispensables : sommes, suites,
@@ -30,16 +34,6 @@
 \vspace{0.8em}
 
 % **********************************************************************
-\section{Pourquoi des maths dans l’informatique ?}
-Un algorithme n’est pas seulement un bout de code ; c’est une idée
-\emph{prouvable}. Les mathématiques servent :
-\begin{enumerate}
-  \item à \textbf{décrire} précisément le problème et l’algorithme ;
-  \item à \textbf{démontrer} sa correction (le résultat est toujours bon) ;
-  \item à \textbf{quantifier} ses ressources (temps, mémoire, bande
-        passante, énergie).\footnote{Voir l’introduction de
-        \cite{Cormen2022} pour une discussion classique.}
-\end{enumerate}
 
 \begin{reflexion}
 Pensez à un jeu vidéo, une application bancaire et un réseau social. Où, selon
@@ -61,15 +55,29 @@ En pratique, on utilise une suite pour \textbf{compter} combien d’opérations 
 
 
 \subsection{Sommes arithmétiques et géométriques}
+% ----------------------------------------------------------------------
+
+En algorithmique, les sommes arithmétiques et géométriques interviennent partout : elles modélisent le coût cumulé d’itérations successives, l’analyse des boucles imbriquées ou le nombre de nœuds explorés dans un arbre de récursion. Maîtriser ces formules permet donc de passer rapidement d’une définition de boucle ou de récurrence à une expression ferme de la complexité.
+
 \begin{align*}
 \sum_{i=1}^{n} i &\;=\; \frac{n(n+1)}{2} && \text{(Gauss : addition « en miroir »)}\\[0.4em]
 \sum_{i=0}^{n-1} r^{i} &\;=\; \frac{1-r^{n}}{1-r}\quad (r\neq 1) && \text{(raison $r$ ; géométrique)}
 \end{align*}
 \emph{Application} : si un tri naïf effectue $(n-1)+\dots+2+1$ comparaisons,
-il exécute $\tfrac{n(n-1)}{2}\in\Theta(n^2)$ opérations.
+il exécute $\tfrac{n(n-1)}{2}$ opérations.
 
-\subsection{Logarithmes — rappels essentiels}
-Soient $a$ et $b$ deux réels strictement positifs :\\
+\subsection{Logarithmes}
+% ----------------------------------------------------------------------
+Les logarithmes interviennent systématiquement dès qu’un algorithme divise
+le problème en sous-parties, ou que l’on analyse des
+boucles qui réduisent la taille des données à chaque itération. Comprendre
+leurs propriétés est essentiel pour
+transformer ces comportements récursifs ou divisifs en formules de complexité précises.
+
+Voici alors quelques rappels importants sur les logarithmes :
+
+Soient $a$ et $b$ deux réels strictement positifs :
+
 \begin{itemize}
   \item $\log_b a$ = exposant $x$ tel que $b^x=a$.
   \item Bases usuelles : $2$ (binaire), $10$ (décimale), $e$ (naturel).
@@ -78,14 +86,12 @@ Soient $a$ et $b$ deux réels strictement positifs :\\
         $\varepsilon>0$.
 \end{itemize}
 
-\begin{exercice}[Manipuler les logarithmes]
-Montrez que $\displaystyle\log_2(n!)\in\Theta(n\log n)$.
-\textit{Indication :} utilisez la somme $\sum_{k=1}^{n} \log_2 k$ et comparez‑la
-à une intégrale.
-\end{exercice}
 
 % **********************************************************************
 \section{Principe d’induction : mode d’emploi}
+La preuve par induction est l’outil clé pour établir rigoureusement qu’une propriété mathématique, notée ici $P(n)$, ou qu’un invariant de programme, tient pour \emph{tous} les entiers à partir d’une valeur de départ.
+
+Cette démarche en cascade garantit la validité de la propriété pour toutes les valeurs $n\ge n_{0}$, et s’adapte aussi bien à l’induction simple qu’à l’induction forte.
 
 \subsection{Induction simple (ou faible)}
 \begin{enumerate}
@@ -153,7 +159,8 @@ récurrence}.  Résoudre cette équation, c’est transformer une description
         (somme arithmétique, géométrique…), que l’on additionne jusqu’à
         atteindre le cas de base \(T(1)\).
 
-  \item[Substitution]\phantom{a}\\
+  \item[Substitution]\phantom{a}
+
         \begin{enumerate}
          \item Formuler une \emph{conjecture} raisonnable $f(n)$.
          \item Prouver par induction (souvent forte) que $T(n)\le f(n)$ ou
@@ -216,8 +223,6 @@ algorithme divise la taille de l’entrée par 2 à chaque étape.
 \section{Notation asymptotique}
 
 % **********************************************************************
-\subsection{$\bigO$, $\Omega$, $\Theta$ — définitions formelles}
-
 Lorsque nous évaluons un algorithme, nous voulons savoir comment son
 temps d’exécution ou sa consommation mémoire \emph{croissent} avec la taille
 de l’entrée $n$.  Compter le nombre \emph{exact} d’opérations
@@ -238,6 +243,7 @@ constantes multiplicatives.  Elles permettent :
   \item de raisonner sur la faisabilité \emph{avant} d’écrire la moindre
         ligne de code.
 \end{itemize}
+
 En pratique, la notation asymptotique est donc la \emph{boussole} qui guide
 nos choix d’algorithmes et d’optimisations.
 
@@ -283,7 +289,6 @@ $\log n$, $n^{0.5}$, $n\log n$, $2^{n}$, $n!$, $n^{2}$.
 % **********************************************************************
 \section{Probabilités élémentaires pour l’analyse d’algorithmes}
 
-\subsection{Pourquoi la probabilité en algorithmique ?}
 Nombre d’algorithmes modernes (Quicksort randomisé, algorithmes de Monte-Carlo,
 protocoles réseau) prennent des décisions au hasard ; leur \emph{coût} n’est
 plus déterministe.  Les outils probabilistes permettent alors de :
@@ -319,14 +324,6 @@ plus déterministe.  Les outils probabilistes permettent alors de :
         \(\mathbb{E}[X]=\sum_i \mathbb{P}[A_i]\).
 \end{description}
 
-\subsection{Petit exemple classique}
-Combien de lancers de pièce faut-il \emph{en moyenne} avant d’obtenir pile ?
-
-\[
-\mathbb{E}[X] = p\cdot1 + (1-p)p\cdot2 + (1-p)^{2}p\cdot3+\dots
-              = \frac{1}{p},
-\quad p=\tfrac12 \;\Rightarrow\; \mathbb{E}[X]=2.
-\]
 
 \subsection{Application : coût moyen d’une boucle aléatoire}
 Supposons une boucle qui se répète tant qu’un événement de probabilité
@@ -365,7 +362,7 @@ algorithme où cette propriété simplifie drastiquement le calcul.
 \begin{exercice}[Somme arithmétique]
 Calculez, par induction simple, la valeur de la somme
 \(\displaystyle S(n)=\sum_{i=1}^{n}(2i-1)\)
-et vérifiez que \(S(n)\) est égale à \(n^{2}\).  %&#8203;:contentReference[oaicite:0]{index=0}
+et vérifiez que \(S(n)\) est égale à \(n^{2}\).
 \end{exercice}
 
 \begin{exercice}[Manipuler les logarithmes]
@@ -373,13 +370,13 @@ Montrez que pour tout \(n\ge1\),
 \[
 \log_2(n!) \;=\; \Theta\!\bigl(n\log n\bigr).
 \]
-(On pourra encadrer la somme \(\sum_{k=1}^{n}\log_2 k\) par une intégrale.)  %&#8203;:contentReference[oaicite:1]{index=1}
+(On pourra encadrer la somme \(\sum_{k=1}^{n}\log_2 k\) par une intégrale.)
 \end{exercice}
 
 \begin{exercice}[Induction forte et nombres de Fibonacci]
 Prouvez, par induction forte, que pour tout \(n\ge 0\),
 le \(n\)-ième nombre de Fibonacci vérifie
-\(F_{n}\le 2^{n}\).  %&#8203;:contentReference[oaicite:2]{index=2}
+\(F_{n}\le 2^{n}\).
 \end{exercice}
 
 \begin{exercice}[Récurrence linéaire]
@@ -387,18 +384,18 @@ Soit \(T(n)=3T(n-1)+2\) avec \(T(0)=4\).
 \begin{enumerate}[label=\alph*)]
   \item Trouvez la forme fermée de \(T(n)\) par déroulement.
   \item Donnez l’ordre de grandeur asymptotique de \(T(n)\).
-\end{enumerate} %&#8203;:contentReference[oaicite:3]{index=3}
+\end{enumerate}
 \end{exercice}
 
 \begin{exercice}[Complexité espérée d’un algorithme aléatoire]
 Un algorithme répète une opération coûtant une unité tant que
 un événement de probabilité \(p=\tfrac13\) ne se produit pas.
-Quel est le coût moyen de l’algorithme ?  %&#8203;:contentReference[oaicite:4]{index=4}
+Quel est le coût moyen de l’algorithme ?
 \end{exercice}
 
 
 \begin{exercice}[InsertionSort — formuler la récurrence]
-\textbf{Algorithme}\\[-1.1em]
+\textbf{Algorithme}
 \begin{lstlisting}
 InsertionSort(A[0..n-1]):
     pour i ← 1 a n-1:
@@ -411,7 +408,7 @@ InsertionSort(A[0..n-1]):
 \begin{enumerate}[label=\alph*)]
   \item Établissez la récurrence du \emph{pire cas} pour le coût $T(n)$.
   \item Déduisez le classement de ce coût en notation~$\bigO$.
-\end{enumerate} %&#8203;:contentReference[oaicite:6]{index=6}
+\end{enumerate}
 \end{exercice}
 
 

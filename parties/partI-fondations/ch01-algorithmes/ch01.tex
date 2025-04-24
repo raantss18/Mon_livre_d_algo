@@ -17,18 +17,6 @@ comprend. »\\[-0.2em]
 — \textit{Donald E. Knuth}
 \end{flushright}
 
-\section*{Objectifs du chapitre}
-\begin{itemize}[label=\small$\blacktriangleright$]
-  \item Distinguer clairement \emph{algorithme}, \emph{programme} et \emph{implémentation}.
-  \item Savoir décrire un algorithme simple en pseudo‑code.
-  \item Comprendre pourquoi il est utile de mesurer le temps et la mémoire.
-  \item S’exercer sur des problèmes très élémentaires (tri, PGCD, factorielle).
-\end{itemize}
-\vspace{0.5em}
-
-% **********************************************************************
-\section{Pourquoi parler d’algorithmes ?}
-
 Un \textbf{algorithme} est à l’informatique ce qu’une recette est à la cuisine : un
 ensemble d’étapes précises qui transforment des \emph{ingrédients} (les données
 d’entrée) en un \emph{plat fini} (le résultat). Derrière chaque application —
@@ -41,8 +29,21 @@ algorithmes. Étudier leur conception permet :
   \item d’améliorer continuellement l’efficacité des logiciels.          % optimisation
 \end{enumerate}
 
+\section*{Objectifs du chapitre}
+\begin{itemize}[label=\small$\blacktriangleright$]
+  \item Distinguer clairement \emph{algorithme}, \emph{programme} et \emph{implémentation}.
+  \item Savoir décrire un algorithme simple en pseudo‑code.
+  \item Comprendre pourquoi il est utile de mesurer le temps et la mémoire.
+  \item S’exercer sur des problèmes très élémentaires (tri, PGCD, factorielle).
+\end{itemize}
+\vspace{0.5em}
+
+% **********************************************************************
+%\section{Pourquoi parler d’algorithmes ?}
+
+
 \begin{reflexion}
-Citez trois activités quotidiennes (hors informatique) qui suivent déjà un
+Donnez des activités quotidiennes (hors informatique) qui suivent déjà un
 algorithme implicite. Que se passerait‑il si les étapes étaient exécutées dans
 le désordre ?
 \end{reflexion}
@@ -50,28 +51,159 @@ le désordre ?
 % **********************************************************************
 \section{Vocabulaire de base}
 
-\subsection{Algorithme}
-Suite finie d’\textbf{instructions non ambiguës} exécutées dans un ordre bien
-défini. Chaque pas doit être si clair qu’une personne (ou une machine) ne peut
-l’interpréter de deux façons différentes.
+% **********************************************************************
+\subsection{Algorithme }
+
+Un \textbf{algorithme} est une suite finie d’instructions respectant quatre
+critères essentiels :
+\begin{description}
+  \item[Finitude] chaque exécution comporte un nombre limité d’étapes, et
+        l’algorithme se termine toujours après un nombre fini d’opérations.
+  \item[Déterminisme] à chaque étape, l’instruction suivante est parfaitement
+        définie, sans ambigüité ni hasard non maîtrisé.
+  \item[Non-ambiguïté] chaque action (affectation, comparaison…) est formulée
+        de façon à ne pouvoir être interprétée que d’une seule manière.
+  \item[Entrées / sorties] l’algorithme reçoit une \emph{entrée} bien définie
+        et produit une \emph{sortie} (résultat) correspondant exactement à la
+        spécification.
+\end{description}
+
+Ces principes garantissent que toute personne ou machine exécutant l’algorithme
+obtiendra toujours le même résultat en un temps fini.
+
+% ----------------------------------------------------------------------
+
+Voici un exemple de pseudo-code illustrant les points essentielles d'un algorithme :
+
+\begin{lstlisting}[mathescape=true]
+fonction linearSearch(A[0..n-1], key):
+    // A : tableau d'entiers de taille n
+    // key : valeur recherchee
+    pour i de 0 a n-1 faire          // parcours sequentiel
+        si A[i] == key alors         // test d'egalite
+            retourner i              // on renvoie l'indice trouve
+        fin si
+    fin pour
+    retourner -1                     // indicateur d'absence
+\end{lstlisting}
+
+\noindent
+\begin{itemize}
+ \item La variable `i` parcourt chaque case de `A`.
+ \item La condition `A[i] == key` est une opération élémentaire.
+ \item En pire cas, toutes les \(n\) cases sont examinées.
+ \item L’usage de mots-clés en français (`pour`, `si`, `fin si`) rend le code
+  indépendant d’un langage particulier et très clair pour un débutant.
+\end{itemize}
 
 \subsection{Programme}
-Traduction d’un algorithme dans un \textbf{langage} que l’ordinateur
-comprend (C++, Python, Java…). Le compilateur ou l’interpréteur sert de pont
-entre nos idées et la machine.
+Un \emph{programme} est l’implémentation concrète d’un algorithme dans un
+\textbf{langage formel} que l’ordinateur peut comprendre et exécuter.
+Le code source décrit :
+\begin{itemize}
+  \item la \textbf{structure des données} (types, variables) ;
+  \item le \textbf{flot de contrôle} (fonctions, boucles, conditions) ;
+  \item les opérations d’\textbf{entrée/sortie} (lecture, affichage, fichiers…).
+\end{itemize}
+Le traducteur peut être :
+\begin{itemize}
+  \item un \emph{compilateur} (C++, Java → bytecode/masque binaire) ;
+  \item un \emph{interpréteur} (Python, commandes successives à la volée).
+\end{itemize}
+Le résultat final est un exécutable ou un script prêt à tourner sur la machine.
+
+% ----------------------------------------------------------------------
+% ----------------------------------------------------------------------
+\paragraph{Mise en œuvre pratique}
+Pour illustrer la traduction d’un algorithme en programme, voici trois
+implémentations de la recherche linéaire (pseudo-code précédent) en
+C++, Python et Java :
+
+
+\paragraph{C++ (linear\_search.cpp)}
+\begin{lstlisting}[language=C++,caption={linear\_search.cpp}]
+#include <vector>
+#include <iostream>
+
+// Renvoie l'indice de key dans A, ou -1 si absent
+int linearSearch(const std::vector<int>& A, int key) {
+    for (size_t i = 0; i < A.size(); ++i) {
+        if (A[i] == key) return static_cast<int>(i);
+    }
+    return -1;
+}
+
+int main() {
+    std::vector<int> A = {5, 3, 8, 4, 2};
+    int key = 4;
+    int idx = linearSearch(A, key);
+    if (idx >= 0)
+        std::cout << "Trouve a l'indice " << idx << "\n";
+    else
+        std::cout << "Non trouve\n";
+    return 0;
+}
+\end{lstlisting}
+
+\paragraph{Python (linear\_search.py)}
+\begin{lstlisting}[language=Python,caption={linear\_search.py}]
+# Renvoie l'indice de key dans A, ou -1 si absent
+def linear_search(A, key):
+    for i, v in enumerate(A):
+        if v == key:
+            return i
+    return -1
+
+if __name__ == "__main__":
+    A = [5, 3, 8, 4, 2]
+    key = 4
+    idx = linear_search(A, key)
+    if idx != -1:
+        print(f"Trouve a l'indice {idx}")
+    else:
+        print("Non trouve")
+\end{lstlisting}
+
+\paragraph{Java (LinearSearch.java)}
+\begin{lstlisting}[language=Java,caption={LinearSearch.java}]
+public class LinearSearch {
+    // Renvoie l'indice de key dans A, ou -1 si absent
+    public static int linearSearch(int[] A, int key) {
+        for (int i = 0; i < A.length; i++) {
+            if (A[i] == key) return i;
+        }
+        return -1;
+    }
+
+    public static void main(String[] args) {
+        int[] A = {5, 3, 8, 4, 2};
+        int key = 4;
+        int idx = linearSearch(A, key);
+        if (idx >= 0)
+            System.out.println("Trouve a l'indice " + idx);
+        else
+            System.out.println("Non trouve");
+    }
+}
+\end{lstlisting}
 
 \subsection{Spécification et implémentation}
-\begin{itemize}
-  \item \textbf{Spécification} : \og que doit faire le programme ? \fg{}
-        (ex. \og trier les nombres par ordre croissant \fg).
-  \item \textbf{Implémentation} : \og comment va‑t‑il s’y prendre ? \fg{}
-        (ex. \emph{méthode de tri par insertion}).
-\end{itemize}
-Séparer les deux évite de se perdre dans les détails trop tôt.
+% ----------------------------------------------------------------------
+
+Avant d’écrire la moindre ligne de code, il est indispensable de
+séparer clairement deux niveaux de description : la \textbf{spécification},
+qui répond à la question \og que doit faire le programme ? \fg{}, et
+l’\textbf{implémentation}, qui détaille \og comment il va s’y prendre ? \fg{}.
+Cette distinction assure une conception rigoureuse, facilite la preuve de
+correction et simplifie la maintenance.
+
+
+Par exemple, « trier une liste de nombres entiers en ordre croissant. » est une spécification tandis qu'\og utiliser le tri par insertion pour trier\fg est une implémentation.
+
 
 \begin{exercice}[Spécification ou implémentation ?]
-Pour chaque phrase, cochez \emph{S} (spécification) ou \emph{I} (implémentation)
-et justifiez votre choix :
+Pour chaque phrase, dire si \emph{S} (spécification) ou \emph{I} (implémentation)
+et justifier votre choix :
 \begin{enumerate}[label=\alph*)]
   \item \og Trouver le plus grand nombre dans une liste. \fg{}
   \item \og Parcourir la liste et mémoriser la valeur maximale rencontrée. \fg{}
@@ -82,13 +214,13 @@ et justifiez votre choix :
 \end{exercice}
 
 % **********************************************************************
-\section{Premier exemple : le plus grand commun diviseur}
+\section{Exemple : le plus grand commun diviseur}
 
 Nous allons calculer le \textbf{PGCD} de deux entiers grâce à l’algorithme
 millénaire d’Euclide. Pourquoi ce choix ? Il est court, toujours correct et ses
 performances se mesurent facilement.
 
-\subsection{Pseudo‑code pas à pas}
+\subsection{Pseudo‑code}
 \begin{lstlisting}[caption={Algorithme d'Euclide (version itérative)}]
 Entree : deux entiers strictement positifs a, b (a ≥ b)
 Sortie : g = pgcd(a, b)
@@ -101,7 +233,6 @@ Tant que h ≠ 0 faire
 Retourner g
 \end{lstlisting}
 
-\paragraph{Lecture ligne à ligne}
 \begin{itemize}
   \item \texttt{g} contient la valeur courante du PGCD présumé.
   \item Tant que le reste \texttt{h} n’est pas nul, on poursuit la division.
@@ -109,7 +240,7 @@ Retourner g
         le PGCD.
 \end{itemize}
 
-\subsection{Implémentation C++ minimale}
+\subsection{Implémentation C++}
 \begin{lstlisting}[language=C++,caption=euclid.cpp]
 #include <iostream>
 #include <cstdint>
@@ -163,7 +294,13 @@ l’algorithme d’Euclide, on se contente de trois variables entières ; l’e
 \end{exercice}
 
 % **********************************************************************
-\section{Mini‑projet guidé}
+\section*{À retenir}
+\begin{itemize}
+  \item Un \textbf{algorithme} = recette finie et non ambiguë.
+  \item Un \textbf{programme} = algorithme + langage + machine.
+  \item Spécification (\og quoi ?\fg) \emph{$\neq$} implémentation (\og comment ?\fg).
+  \item Avant d’optimiser, on mesure : temps $\bigO(\cdot)$ et mémoire.
+\end{itemize}
 
 \begin{tp}[De l’algorithme au programme]
 \textbf{But :} créer une mini‑bibliothèque C++ nommée \texttt{arith} contenant
@@ -183,13 +320,6 @@ correction par des tests unitaires (Catch2).
 \end{tp}
 
 % **********************************************************************
-\section*{À retenir}
-\begin{itemize}
-  \item Un \textbf{algorithme} = recette finie et non ambiguë.
-  \item Un \textbf{programme} = algorithme + langage + machine.
-  \item Spécification (\og quoi ?\fg) \emph{$\neq$} implémentation (\og comment ?\fg).
-  \item Avant d’optimiser, on mesure : temps $\bigO(\cdot)$ et mémoire.
-\end{itemize}
 
 % ----------------------------------------------------------------------
 % Fin du chapitre
